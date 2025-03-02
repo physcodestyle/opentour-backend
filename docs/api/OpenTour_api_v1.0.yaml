@@ -1,0 +1,191 @@
+openapi: 3.0.3
+info:
+  title: OpenRoom
+  version: v1.0
+
+
+
+tags:
+  - name: Users
+    description: Работа с профилями участников
+  - name: Tours 
+    description: Работа с турами
+  - name: Guids
+    description: Работа с профилями гидов
+  - name: Chats
+    description: Работа с чатами
+  - name: Feedback
+    description: Работа с отзывами
+  - name: Knowledge Base 
+    description: Работа с базой знаний (заметки)
+  - name: Site Management
+    description: Административные функции
+
+
+paths:
+  /tours/{tour_id}:
+    get:
+      summary: Получить информацию о туре
+      tags: 
+        - Tours
+      parameters:
+        - name: tour_id
+          in: path
+          required: true 
+          schema: 
+            type: integer
+      responses: 
+        200: 
+          description: OK
+          content:
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/Tour'
+        404: 
+          description: Не найдено
+
+
+
+components:
+  schemas:
+    User:
+      type: object
+      description: Пользователь системы
+
+    Guide: 
+      type: object 
+      description: Экскурсовод
+
+    Tour: 
+      type: object
+      description: Экскурсия
+      properties: 
+        tourID: 
+          type: integer
+        tourName:
+          type: string
+        tourSummary: 
+          type: string
+          description: 
+            Краткое описание экскурсии
+        tourDescription:
+          type: string
+          description: 
+            Полное описание экскурсии
+        duration:
+          type: integer
+          description: 
+            Длительность экскурсии (в минутах)
+        hardwareRequirements: 
+          type: string
+          description: 
+            Требования к оборудованию (в виде текстового описания)
+        safetyRequirements: 
+          type: string
+          description: 
+            Требования по безопасности (в виде текстового описания)
+        healthRestrictions: 
+          type: string 
+          description: 
+            Ограничения по здоровью (в виде текстового описания)
+        ageLimit: 
+          $ref: '#/components/schemas/AgeLimit'
+        availableLanguages:
+          type: array
+          items: 
+            $ref: '#/components/schemas/Language'
+        costs: 
+          type: array
+          items:
+            $ref: '#/components/schemas/GroupSizeCosts'
+        transportType: 
+          $ref: '#/components/schemas/TourTransportType'
+        shedule: 
+          type: array 
+          items: 
+            $ref: '#/components/schemas/TourDay'
+        
+    AgeLimit: 
+      type: integer
+      description: 
+        Возрастное ограничение
+      enum: 
+        - 0
+        - 6
+        - 12
+        - 16
+        - 18
+
+    Language: 
+      type: string 
+      description: 
+        Язык
+      enum: 
+        - Русский
+        - English
+
+    GroupSizeCosts:
+      type: object
+      description: 
+        Цена экскурсии для указанного размера группы
+      properties:
+        cost: 
+          $ref: '#/components/schemas/Cost'
+        minGroupSize: 
+          type: integer
+          description: 
+            Минимальный размер группы
+        maxGroupSize: 
+          type: integer 
+          description: 
+            Максимальный размер экскурсионной группы
+        costsDescription: 
+          type: string 
+          description: 
+            Описание услуг (что входит в цену)
+        extraCosts: 
+          type: string
+          description: 
+            Описание дополнительных расходов 
+
+    Cost: 
+      type: object
+      description: 
+        Цена
+      properties:
+        numCost: 
+          type: number
+          description: 
+            Цена в целых единицах валюты
+        currency: 
+          $ref: '#/components/schemas/Currency'
+
+    Currency:
+      type: string 
+      description: 
+        Наименование валюты
+      enum:
+        - RUB
+        - USD
+
+    TourTransportType: 
+      type: string
+      enum: 
+        - walking
+        - scooter
+        - bus
+
+    TourDayStatus: 
+      type: string 
+      enum:
+        - free
+        - occupied
+
+    TourDay: 
+      type: object
+      properties:
+        date: 
+          type: string 
+          format: date 
+        status: 
+          $ref: '#/components/schemas/TourDayStatus'
