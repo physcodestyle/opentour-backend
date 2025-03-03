@@ -43,7 +43,26 @@ paths:
                 $ref: '#/components/schemas/Tour'
         404: 
           description: Не найдено
-
+  /guids/{guide_id}:
+    get:
+      summary: Получить информацию о гиде
+      tags:
+        - Guids
+      parameters:
+        - name: guide_id 
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Guide'
+        404:
+            description: Не найдено 
 
 
 components:
@@ -52,10 +71,28 @@ components:
       type: object
       description: Пользователь системы
 
-    Guide: 
-      type: object 
-      description: Экскурсовод
-
+    Guide:
+      type: object
+      description: Профиль экскурсовода
+      properties:
+        guideID:
+          type: integer
+        guideName:
+          type: string
+        availableLanguages:
+          type: array
+          items: 
+            $ref: '#/components/schemas/Language'
+          description: 
+            Языки которыми владеет экскурсовод
+        guideRating:
+          type: number
+          description: 
+            рейтинг экскурсовода
+        guideNumberOfTour:
+          type: integer
+          description: 
+            количество проведенных экскурсий
     Tour: 
       type: object
       description: Экскурсия
