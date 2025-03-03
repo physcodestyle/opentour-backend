@@ -43,6 +43,7 @@ paths:
                 $ref: '#/components/schemas/Tour'
         404: 
           description: Не найдено
+
   /guids/{guide_id}:
     get:
       summary: Получить информацию о гиде
@@ -62,7 +63,64 @@ paths:
               schema:
                 $ref: '#/components/schemas/Guide'
         404:
-            description: Не найдено 
+            description: Не найдено   
+    delete:
+      summary: удалить профиль гида
+      tags:
+        - Guids
+      parameters:
+        - name: guide_id 
+          in: path
+          required: true
+          schema:
+            type: integer       
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Guide'
+        404:
+            description: Не найдено   
+    post:
+      summary: Создать профиль гида
+      tags: 
+        - Guids
+      parameters:
+          - name: guide_id 
+            in: path
+            required: true
+            schema:
+              type: integer
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Guide'
+        404:
+            description: Не найдено      
+    put:
+      summary: Создать профиль гида
+      tags: 
+        - Guids
+      parameters:
+          - name: guide_id 
+            in: path
+            required: true
+            schema:
+              type: integer
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Guide'
+        404:
+            description: Не найдено  
 
 
 components:
@@ -70,10 +128,13 @@ components:
     User:
       type: object
       description: Пользователь системы
-
+    
     Guide:
       type: object
       description: Профиль экскурсовода
+      required:
+        - guideID
+        - guideName
       properties:
         guideID:
           type: integer
@@ -93,12 +154,23 @@ components:
           type: integer
           description: 
             количество проведенных экскурсий
+        guidePhotoProfile:
+          type: string
+          description: 
+            Аватарка на профиле гида
+        guidePhoto: 
+          type: array
+          items: 
+            type: string
+
+
     Tour: 
       type: object
       description: Экскурсия
       properties: 
         tourID: 
           type: integer
+          readOnly: true
         tourName:
           type: string
         tourSummary: 
