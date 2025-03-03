@@ -4,7 +4,6 @@ info:
   version: v1.0
 
 
-
 tags:
   - name: Users
     description: Работа с профилями участников
@@ -45,13 +44,373 @@ paths:
           description: Не найдено
 
 
+  /admin/users:
+    get:
+      tags:
+        - Site Management
+      summary: Получение списка пользователей
+      responses:
+        '200':
+          description: Список участников
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/User'
+        '400':
+          description: Ошибка в запросе
+        '404': 
+          description: Пользователь(и) не найден(ы)
+        '500':
+          description: Ошибка сервера
+          
+          
+  /admin/users/{user_id}:
+    get:
+      tags:
+        - Site Management
+      summary: Получение информации о пользователе
+      parameters:
+        - name: user_id
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Уникальный идентификатор пользователя
+      responses:
+        '200':
+          description: Информация о пользователе
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/User'
+        '400':
+          description: Ошибка в запросе
+        '404': 
+          description: Пользователь не найден
+        '500':
+          description: Ошибка сервера
+    delete:
+      tags:
+        - Site Management
+      summary: Удаление пользователя
+      parameters:
+        - name: user_id
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Уникальный идентификатор пользователя
+      responses:
+        '200': 
+          description: Участник успешно удален
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 'Пользователь user_12345 успешно удален'
+                required:
+                  - message
+        '400':
+          description: Ошибка в запросе
+        '404': 
+          description: Пользователь не найден
+        '500':
+          description: Ошибка сервера
+    put:
+      tags:
+        - Site Management
+      summary: Смена роли пользователя
+      parameters:
+        - name: user_id
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Уникальный идентификатор пользователя
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserRoleUpdate'
+      responses:
+        '200':
+          description: Роль пользователя успешно изменена
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 'Роль пользователя user_12345 изменена на guide'
+                required:
+                  - message
+        '400':
+          description: Ошибка в запросе
+        '404': 
+          description: Пользователь не найден
+        '500':
+          description: Ошибка сервера
+          
+          
+  /admin/logs:
+    get:
+      tags:
+        - Site Management
+      summary: Получение логов системы
+      responses:
+        '200':
+          description: Список логов системы
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    timeStamp:
+                      type: string
+                      format: date-time
+                      example: '2025-03-03T12:00:00Z'
+                      description: Время события
+                    level:
+                      type: string
+                      enum: ['INFO', 'WARNING', 'ERROR', 'DEBUG', 'FATAL']
+                      example: 'INFO'
+                      description: Уровень важности лога
+                    message:
+                      type: string
+                      example: 'Пользователь успешно вошел в систему'
+                      description: Сообщение лога
+                    user_id:
+                      type: string
+                      example: 'user_12345'
+                      description: Идентификатор пользователя, вызвавшего событие 
+                  required:
+                    - timeStamp
+                    - level
+                    - message
+                    - user_id
+        '400':
+          description: Ошибка в запросе
+        '500':
+          description: Ошибка сервера
+    delete:  
+      tags:
+        - Site Management
+      summary: Очищение логов системы
+      responses:
+        '200':
+          description: Логи успешно очищены
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 'Логи успешно очищены'
+                required:
+                  - message
+        '400':
+          description: Ошибка в запросе
+        '500':
+          description: Ошибка сервера
+          
+          
+  /admin/backup:
+    post:
+      tags:
+        - Site Management
+      summary: Создание резервной копии
+      responses:
+        '200':
+          description: Резервная копия успешно создана
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 'Резервная копия успешно создана'
+                required:
+                  - message
+        '400':
+          description: Ошибка в запросе
+        '500':
+          description: Ошибка сервера
+
+
+  /admin/backup/list:
+    get:
+      tags:
+        - Site Management
+      summary: Получение списка резервных копий
+      responses:
+        '200':
+          description: Список резервных копий
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Backup'
+        '400':
+          description: Ошибка в запросе
+        '500':
+          description: Ошибка сервера
+          
+          
+  /admin/backup/restore:
+    post:
+      tags:
+        - Site Management
+      summary: Восстановление данных из резервной копии
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                backupID:
+                  type: string
+                  example: 'backup_12345'
+                  description: Идентификатор резервной копии для восстановления
+              required:
+                - backupID
+      responses:
+        '200':
+          description: Данные успешно восстановлены из резервной копии
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 'Данные успешно восстановлены из резервной копии backup_12345'
+                required:
+                  - message
+        '400':
+          description: Ошибка в запросе
+        '404':
+          description: Резервная копия не найдена
+        '500':
+          description: Ошибка сервера
+
+
+  /admin/analytics/users:
+    get:
+      tags:
+        - Site Management
+      summary: Просмотр статистики по пользователям
+      responses:
+        '200':
+          description: Статистика по пользователям
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  totalUsers:
+                    type: integer
+                    example: 1500
+                    description: Общее количество пользователей
+                  activeUsers:
+                    type: integer
+                    example: 1000
+                    description: Количество активных пользователей
+                  inactiveUsers:
+                    type: integer
+                    example: 500
+                    description: Количество неактивных пользователей
+                required:
+                  - totalUsers
+                  - activeUsers
+                  - inactiveUsers
+        '400':
+          description: Ошибка в запросе
+        '500':
+          description: Ошибка сервера
+          
+          
+  /admin/analytics/content:
+    get:
+      tags:
+        - Site Management
+      summary: Просмотр статистики по контенту
+      responses:
+        '200':
+          description: Статистика по контенту
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  totalNotes:
+                    type: integer
+                    example: 200
+                    description: Общее количество заметок
+                  totalTours:
+                    type: integer
+                    example: 50
+                    description: Общее количество экскурсий
+                  contentInteraction:
+                    type: integer
+                    example: 10000
+                    description: Общее количество взаимодействий с контентом (просмотры, лайки, комментарии и т.д.)
+                required:
+                  - totalNotes
+                  - totalTours
+                  - contentInteraction
+        '400':
+          description: Ошибка в запросе
+        '500':
+          description: Ошибка сервера
+          
+          
+  /admin/analytics/system:
+    get:
+      tags:
+        - Site Management
+      summary: Аналитика работы системы
+      responses:
+        '200':
+          description: Общая аналитика работы системы
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errorsLast24h:
+                    type: integer
+                    example: 5
+                    description: Количество ошибок за последние 24 часа
+                  totalRequests:
+                    type: integer
+                    example: 100000
+                    description: Общее количество запросов к системе
+                required:
+                  - errorsLast24h
+                  - totalRequests
+        '400':
+          description: Ошибка в запросе
+        '500':
+          description: Ошибка сервера
+
 
 components:
   schemas:
-    User:
-      type: object
-      description: Пользователь системы
-
     Guide: 
       type: object 
       description: Экскурсовод
@@ -189,3 +548,57 @@ components:
           format: date 
         status: 
           $ref: '#/components/schemas/TourDayStatus'
+
+    User:
+      type: object
+      properties:
+        userName:
+          type: string
+          example: 'john doe'
+          description: Имена участников
+        userRole:
+          type: string
+          enum: ['guide', 'admin', 'participant']
+          example: 'guide'
+          description: Роли участников
+        user_id:
+          type: string
+          example: 'user_12345'
+          description: Идентификатор пользователя
+      required:
+        - userName
+        - userRole
+        - user_id
+
+    Backup:
+      type: object
+      properties:
+        backupID:
+          type: string
+          example: 'backup_12345'
+          description: Идентификатор резервной копии
+        createTime:
+          type: string
+          format: date-time
+          example: '2025-03-03T12:00:00Z'
+          description: Время создания резервной копии
+        status:
+          type: string
+          enum: ['created', 'restoring', 'failed']
+          example: 'created'
+          description: Статус резервной копии
+      required:
+        - backupID
+        - createTime
+        - status
+
+    UserRoleUpdate:
+      type: object
+      properties:
+        newRole:
+          type: string
+          enum: ['guide', 'admin', 'participant']
+          example: 'guide'
+          description: Новая роль пользователя
+      required:
+        - newRole
