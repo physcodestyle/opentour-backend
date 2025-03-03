@@ -77,33 +77,22 @@ paths:
       responses:
         200:
           description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Guide'
         404:
             description: Не найдено   
     post:
       summary: Создать профиль гида
       tags: 
         - Guids
-      parameters:
-          - name: guide_id 
-            in: path
-            required: true
+      requestBody:
+        content:
+          application/json:
             schema:
-              type: integer
+              $ref: '#/components/schemas/Guide'
       responses:
-        200:
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Guide'
-        404:
-            description: Не найдено      
+        201:        
+          description: Успешно созданно   
     put:
-      summary: Создать профиль гида
+      summary: изменение профиля гида
       tags: 
         - Guids
       parameters:
@@ -112,15 +101,17 @@ paths:
             required: true
             schema:
               type: integer
-      responses:
-        200:
-          description: OK
-          content:
-            application/json:
+      requestBody:
+        content:
+          application/json:
               schema:
+                type: array
                 $ref: '#/components/schemas/Guide'
+      responses:          
+        200:
+          description: OK        
         404:
-            description: Не найдено  
+          description: Не найдено  
 
 
 components:
@@ -138,6 +129,7 @@ components:
       properties:
         guideID:
           type: integer
+          readOnly: true
         guideName:
           type: string
         availableLanguages:
@@ -147,10 +139,12 @@ components:
           description: 
             Языки которыми владеет экскурсовод
         guideRating:
+          readOnly: true
           type: number
           description: 
             рейтинг экскурсовода
         guideNumberOfTour:
+          readOnly: true
           type: integer
           description: 
             количество проведенных экскурсий
