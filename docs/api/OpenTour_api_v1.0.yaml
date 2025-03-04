@@ -64,6 +64,7 @@ paths:
                 $ref: '#/components/schemas/Guide'
         404:
             description: Не найдено   
+
     delete:
       summary: удалить профиль гида
       tags:
@@ -79,6 +80,7 @@ paths:
           description: OK
         404:
             description: Не найдено   
+
     post:
       summary: Создать профиль гида
       tags: 
@@ -91,6 +93,9 @@ paths:
       responses:
         201:        
           description: Успешно созданно   
+        400:
+          description: Ошибка в запросе
+          
     put:
       summary: изменение профиля гида
       tags: 
@@ -156,6 +161,7 @@ components:
           type: array
           items: 
             type: string
+          description: остальные фото в профиле
 
 
     Tour: 
