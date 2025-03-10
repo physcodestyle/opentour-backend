@@ -1,6 +1,6 @@
 openapi: 3.0.3
 info:
-  title: OpenRoom
+  title: OpenTour
   version: v1.0
 
 
@@ -22,7 +22,80 @@ tags:
     description: Административные функции
 
 
+
 paths:
+  /tours/:
+    get: 
+      summary: Получить список туров
+      tags:
+        - Tours 
+      parameters:
+        - name: count 
+          in: query
+          required: false 
+          description: 
+            Число туров в списке
+          schema: 
+            type: integer
+            default: 50
+        - name: offset
+          in: query
+          required: false
+          description: 
+            Сдвиг от начала списка (для постраничной выборки)
+          schema: 
+            type: integer
+            default: 0 
+        - name: country 
+          in: query
+          required: false
+          schema: 
+            $ref: '#/components/schemas/Country'
+        - name: city
+          in: query
+          required: false
+          schema: 
+            $ref: '#/components/schemas/City'
+        - name: ageLimit
+          in: query
+          required: false
+          schema: 
+            $ref: '#/components/schemas/AgeLimit'
+        - name: transportType
+          in: query
+          required: false
+          schema: 
+            $ref: '#/components/schemas/TourTransportType'
+        - name: date
+          in: query
+          required: false
+          schema: 
+            type: array
+            items: 
+              type: string 
+              format: date
+      responses:
+        200: 
+          description: OK
+          content:
+            application/json:
+              schema: 
+                type: array
+                items: 
+                  $ref: '#/components/schemas/Tour'
+    post: 
+      summary: Создать тур
+      tags: 
+        - Tours
+      requestBody: 
+        content:
+          application/json:
+            schema: 
+              $ref: '#/components/schemas/Tour'
+      responses: 
+        201: 
+          description: Усепешно создано
+
   /tours/{tour_id}:
     get:
       summary: Получить информацию о туре
@@ -43,7 +116,83 @@ paths:
                 $ref: '#/components/schemas/Tour'
         404: 
           description: Не найдено
+    delete:
+      summary: Удалить тур 
+      tags: 
+        - Tours
+      parameters:
+        - name: tour_id
+          in: path
+          required: true 
+          schema: 
+            type: integer
+      responses: 
+        200: 
+          description: OK
+    put: 
+      summary: Изменить информацию о туре
+      tags: 
+        - Tours
+      parameters:
+        - name: tour_id
+          in: path
+          required: true 
+          schema: 
+            type: integer
+      requestBody: 
+        content:
+          application/json:
+            schema: 
+              $ref: '#/components/schemas/Tour'
+      responses: 
+        200: 
+          description: OK
 
+  /tours/{tour_id}/shedule: 
+    get: 
+      summary: Получить расписание тура
+      tags: 
+        - Tours
+      parameters:
+        - name: tour_id
+          in: path
+          required: true 
+          schema: 
+            type: integer
+      responses: 
+        200: 
+          description: OK
+          content:
+            application/json:
+              schema: 
+                type: array
+                description: 
+                  Список дней с указанием статуса
+                items:
+                  $ref: '#/components/schemas/TourDay'
+    put: 
+      summary: Изменить расписание тура
+      tags: 
+        - Tours
+      parameters:
+        - name: tour_id
+          in: path
+          required: true 
+          schema: 
+            type: integer
+      requestBody: 
+        content:
+            application/json:
+              schema: 
+                type: array
+                description: 
+                  Список дней с указанием статуса
+                items:
+                  $ref: '#/components/schemas/TourDay'
+      responses: 
+        200: 
+          description: OK
+          
   /guids/{guide_id}:
     get:
       summary: Получить информацию о гиде
@@ -118,7 +267,6 @@ paths:
         404:
           description: Не найдено  
 
-
 components:
   schemas:
     User:
@@ -166,7 +314,18 @@ components:
 
     Tour: 
       type: object
-      description: Экскурсия
+      description: 
+        Экскурсия
+      required:
+        - tourID 
+        - tourName 
+        - tourSummary 
+        - duration 
+        - ageLimit 
+        - availableLanguages 
+        - costs 
+        - shedule 
+        - transportType 
       properties: 
         tourID: 
           type: integer
@@ -201,23 +360,28 @@ components:
           $ref: '#/components/schemas/AgeLimit'
         availableLanguages:
           type: array
+          description: 
+            Список поддерживаемых языков
           items: 
             $ref: '#/components/schemas/Language'
         costs: 
           type: array
+          description: 
+            Тарифы на экскурсионные группы
           items:
             $ref: '#/components/schemas/GroupSizeCosts'
         transportType: 
           $ref: '#/components/schemas/TourTransportType'
-        shedule: 
-          type: array 
+        photos: 
+          type: array
           items: 
-            $ref: '#/components/schemas/TourDay'
+            type: string
+            example: https://opentest.info/photo.jpg
         
     AgeLimit: 
       type: integer
       description: 
-        Возрастное ограничение
+        Возрастное ограничение (минимальный возраст)
       enum: 
         - 0
         - 6
@@ -237,6 +401,10 @@ components:
       type: object
       description: 
         Цена экскурсии для указанного размера группы
+      required:
+        - cost 
+        - minGroupSize 
+        - maxGroupSize 
       properties:
         cost: 
           $ref: '#/components/schemas/Cost'
@@ -261,6 +429,9 @@ components:
       type: object
       description: 
         Цена
+      required:
+        - numCost 
+        - currency
       properties:
         numCost: 
           type: number
@@ -279,6 +450,8 @@ components:
 
     TourTransportType: 
       type: string
+      description: 
+        Тип транспорта
       enum: 
         - walking
         - scooter
@@ -286,15 +459,34 @@ components:
 
     TourDayStatus: 
       type: string 
+      description: 
+        Статус экскурсионного дня
       enum:
         - free
         - occupied
 
     TourDay: 
       type: object
+      description: 
+        Экскурсионный день
+      required:
+        - date 
+        - status
       properties:
         date: 
           type: string 
           format: date 
         status: 
           $ref: '#/components/schemas/TourDayStatus'
+
+    City: 
+      type: string 
+      enum:
+        - Воронеж
+        - Москва
+        - Санкт-Петербург
+
+    Country: 
+      type: string 
+      enum:
+        - Россия
