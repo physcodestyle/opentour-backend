@@ -696,20 +696,6 @@ components:
       bearerFormat: JWT
 
   schemas:
-    User:
-      type: object
-      description: Пользователь системы
-      properties:
-        id:
-          type: integer
-        username:
-          type: string
-        email:
-          type: string
-          format: email
-        role:
-          type: string
-          enum: [user, guide, admin]
 
     UserRegistration:
       type: object
@@ -952,26 +938,45 @@ components:
       status: 
         $ref: '#/components/schemas/TourDayStatus'
 
-  User:
-    type: object
-    properties:
-      userName:
-        type: string
-        example: 'john doe'
-        description: Имена участников
-      userRole:
-        type: string
-        enum: ['guide', 'admin', 'participant']
-        example: 'guide'
-        description: Роли участников
-      user_id:
-        type: string
-        example: 'user_12345'
-        description: Идентификатор пользователя
-    required:
-      - userName
-      - userRole
-      - user_id
+User:
+  description: Пользователь системы
+  type: object
+  properties:
+    userName:
+      type: string
+      example: 'john doe'
+      description: Имена участников
+    userRole:
+      type: string
+      enum: ['guide', 'admin', 'participant']
+      example: 'guide'
+      description: Роли участников
+    user_id:
+      type: string
+      example: 'user_12345'
+      description: Идентификатор пользователя
+    id:
+      type: integer
+      example: 12345
+      description: Идентификатор пользователя в системе
+    username:
+      type: string
+      example: 'john_doe'
+      description: Логин пользователя в системе
+    email:
+      type: string
+      format: email
+      example: 'john.doe@example.com'
+      description: Электронная почта пользователя
+    role:
+      type: string
+      enum: ['user', 'guide', 'admin']
+      example: 'guide'
+      description: Роль пользователя в системе
+  required:
+    - userName
+    - userRole
+    - user_id
 
   Backup:
     type: object
