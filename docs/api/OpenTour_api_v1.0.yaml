@@ -193,17 +193,124 @@ paths:
         200: 
           description: OK
           
-  
+  /guids/{guide_id}:
+    get:
+      summary: Получить информацию о гиде
+      tags:
+        - Guids
+      parameters:
+        - name: guide_id 
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Guide'
+        404:
+            description: Не найдено   
+
+    delete:
+      summary: удалить профиль гида
+      tags:
+        - Guids
+      parameters:
+        - name: guide_id 
+          in: path
+          required: true
+          schema:
+            type: integer       
+      responses:
+        200:
+          description: OK
+        404:
+            description: Не найдено   
+
+    post:
+      summary: Создать профиль гида
+      tags: 
+        - Guids
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Guide'
+      responses:
+        201:        
+          description: Успешно созданно   
+        400:
+          description: Ошибка в запросе
+          
+    put:
+      summary: изменение профиля гида
+      tags: 
+        - Guids
+      parameters:
+          - name: guide_id 
+            in: path
+            required: true
+            schema:
+              type: integer
+      requestBody:
+        content:
+          application/json:
+              schema:
+                type: array
+                $ref: '#/components/schemas/Guide'
+      responses:          
+        200:
+          description: OK        
+        404:
+          description: Не найдено  
 
 components:
   schemas:
     User:
       type: object
       description: Пользователь системы
+    
+    Guide:
+      type: object
+      description: Профиль экскурсовода
+      required:
+        - guideID
+        - guideName
+      properties:
+        guideID:
+          type: integer
+          readOnly: true
+        guideName:
+          type: string
+        availableLanguages:
+          type: array
+          items: 
+            $ref: '#/components/schemas/Language'
+          description: 
+            Языки которыми владеет экскурсовод
+        guideRating:
+          readOnly: true
+          type: number
+          description: 
+            рейтинг экскурсовода
+        guideNumberOfTour:
+          readOnly: true
+          type: integer
+          description: 
+            количество проведенных экскурсий
+        guidePhotoProfile:
+          type: string
+          description: 
+            Аватарка на профиле гида
+        guidePhoto: 
+          type: array
+          items: 
+            type: string
+          description: остальные фото в профиле
 
-    Guide: 
-      type: object 
-      description: Экскурсовод
 
     Tour: 
       type: object
