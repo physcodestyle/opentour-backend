@@ -23,6 +23,73 @@ tags:
 
 
 paths:
+  /users/register:
+    post:
+      summary: Регистрация нового пользователя
+      tags:
+        - Users
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserRegistration'
+      responses:
+        201:
+          description: Пользователь успешно зарегистрирован
+        400:
+          description: Ошибка валидации данных
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /users/login:
+    post:
+      summary: Авторизация пользователя
+      tags:
+        - Users
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserLogin'
+      responses:
+        200:
+          description: Успешный вход, возвращает JWT токен
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthToken'
+        401:
+          description: Неверные учетные данные
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /users/profile:
+    get:
+      summary: Получить профиль текущего пользователя
+      tags:
+        - Users
+      security:
+        - bearerAuth: []
+      responses:
+        200:
+          description: Данные профиля пользователя
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        401:
+          description: Требуется аутентификация
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
   /tours/:
     get: 
       summary: Получить список туров
@@ -283,8 +350,7 @@ paths:
           description: Пользователь(и) не найден(ы)
         '500':
           description: Ошибка сервера
-          
-          
+                
   /admin/users/{user_id}:
     get:
       tags:
@@ -378,8 +444,7 @@ paths:
           description: Пользователь не найден
         '500':
           description: Ошибка сервера
-          
-          
+                  
   /admin/logs:
     get:
       tags:
@@ -443,8 +508,7 @@ paths:
           description: Ошибка в запросе
         '500':
           description: Ошибка сервера
-          
-          
+                  
   /admin/backup:
     post:
       tags:
@@ -468,7 +532,6 @@ paths:
         '500':
           description: Ошибка сервера
 
-
   /admin/backup/list:
     get:
       tags:
@@ -487,8 +550,7 @@ paths:
           description: Ошибка в запросе
         '500':
           description: Ошибка сервера
-          
-          
+                 
   /admin/backup/restore:
     post:
       tags:
@@ -527,7 +589,6 @@ paths:
         '500':
           description: Ошибка сервера
 
-
   /admin/analytics/users:
     get:
       tags:
@@ -561,8 +622,7 @@ paths:
           description: Ошибка в запросе
         '500':
           description: Ошибка сервера
-          
-          
+                   
   /admin/analytics/content:
     get:
       tags:
@@ -596,8 +656,7 @@ paths:
           description: Ошибка в запросе
         '500':
           description: Ошибка сервера
-          
-          
+                  
   /admin/analytics/system:
     get:
       tags:
@@ -630,274 +689,332 @@ paths:
       
 
 components:
-    Guide:
-      type: object
-      description: Профиль экскурсовода
-      required:
-        - guideID
-        - guideName
-      properties:
-        guideID:
-          type: integer
-          readOnly: true
-        guideName:
-          type: string
-        availableLanguages:
-          type: array
-          items: 
-            $ref: '#/components/schemas/Language'
-          description: 
-            Языки которыми владеет экскурсовод
-        guideRating:
-          readOnly: true
-          type: number
-          description: 
-            рейтинг экскурсовода
-        guideNumberOfTour:
-          readOnly: true
-          type: integer
-          description: 
-            количество проведенных экскурсий
-        guidePhotoProfile:
-          type: string
-          description: 
-            Аватарка на профиле гида
-        guidePhoto: 
-          type: array
-          items: 
-            type: string
-          description: остальные фото в профиле
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
 
-    Tour: 
-      type: object
-      description: 
-        Экскурсия
-      required:
-        - tourID 
-        - tourName 
-        - tourSummary 
-        - duration 
-        - ageLimit 
-        - availableLanguages 
-        - costs 
-        - shedule 
-        - transportType 
-      properties: 
-        tourID: 
-          type: integer
-          readOnly: true
-        tourName:
-          type: string
-        tourSummary: 
-          type: string
-          description: 
-            Краткое описание экскурсии
-        tourDescription:
-          type: string
-          description: 
-            Полное описание экскурсии
-        duration:
-          type: integer
-          description: 
-            Длительность экскурсии (в минутах)
-        hardwareRequirements: 
-          type: string
-          description: 
-            Требования к оборудованию (в виде текстового описания)
-        safetyRequirements: 
-          type: string
-          description: 
-            Требования по безопасности (в виде текстового описания)
-        healthRestrictions: 
-          type: string 
-          description: 
-            Ограничения по здоровью (в виде текстового описания)
-        ageLimit: 
-          $ref: '#/components/schemas/AgeLimit'
-        availableLanguages:
-          type: array
-          description: 
-            Список поддерживаемых языков
-          items: 
-            $ref: '#/components/schemas/Language'
-        costs: 
-          type: array
-          description: 
-            Тарифы на экскурсионные группы
-          items:
-            $ref: '#/components/schemas/GroupSizeCosts'
-        transportType: 
-          $ref: '#/components/schemas/TourTransportType'
-        photos: 
-          type: array
-          items: 
-            type: string
-            example: https://opentest.info/photo.jpg
-        
-    AgeLimit: 
-      type: integer
-      description: 
-        Возрастное ограничение (минимальный возраст)
-      enum: 
-        - 0
-        - 6
-        - 12
-        - 16
-        - 18
-
-    Language: 
-      type: string 
-      description: 
-        Язык
-      enum: 
-        - Русский
-        - English
-
-    GroupSizeCosts:
-      type: object
-      description: 
-        Цена экскурсии для указанного размера группы
-      required:
-        - cost 
-        - minGroupSize 
-        - maxGroupSize 
-      properties:
-        cost: 
-          $ref: '#/components/schemas/Cost'
-        minGroupSize: 
-          type: integer
-          description: 
-            Минимальный размер группы
-        maxGroupSize: 
-          type: integer 
-          description: 
-            Максимальный размер экскурсионной группы
-        costsDescription: 
-          type: string 
-          description: 
-            Описание услуг (что входит в цену)
-        extraCosts: 
-          type: string
-          description: 
-            Описание дополнительных расходов 
-
-    Cost: 
-      type: object
-      description: 
-        Цена
-      required:
-        - numCost 
-        - currency
-      properties:
-        numCost: 
-          type: number
-          description: 
-            Цена в целых единицах валюты
-        currency: 
-          $ref: '#/components/schemas/Currency'
-
-    Currency:
-      type: string 
-      description: 
-        Наименование валюты
-      enum:
-        - RUB
-        - USD
-
-    TourTransportType: 
-      type: string
-      description: 
-        Тип транспорта
-      enum: 
-        - walking
-        - scooter
-        - bus
-
-    TourDayStatus: 
-      type: string 
-      description: 
-        Статус экскурсионного дня
-      enum:
-        - free
-        - occupied
-
-    TourDay: 
-      type: object
-      description: 
-        Экскурсионный день
-      required:
-        - date 
-        - status
-      properties:
-        date: 
-          type: string 
-          format: date 
-        status: 
-          $ref: '#/components/schemas/TourDayStatus'
-
+  schemas:
     User:
       type: object
+      description: Пользователь системы
       properties:
-        userName:
+        id:
+          type: integer
+        username:
           type: string
-          example: 'john doe'
-          description: Имена участников
-        userRole:
+        email:
           type: string
-          enum: ['guide', 'admin', 'participant']
-          example: 'guide'
-          description: Роли участников
-        user_id:
+          format: email
+        role:
           type: string
-          example: 'user_12345'
-          description: Идентификатор пользователя
-      required:
-        - userName
-        - userRole
-        - user_id
+          enum: [user, guide, admin]
 
-    Backup:
+    UserRegistration:
       type: object
       properties:
-        backupID:
+        username:
           type: string
-          example: 'backup_12345'
-          description: Идентификатор резервной копии
-        createTime:
+        email:
           type: string
-          format: date-time
-          example: '2025-03-03T12:00:00Z'
-          description: Время создания резервной копии
-        status:
+          format: email
+        password:
           type: string
-          enum: ['created', 'restoring', 'failed']
-          example: 'created'
-          description: Статус резервной копии
-      required:
-        - backupID
-        - createTime
-        - status
+          format: password
 
-    UserRoleUpdate:
+    UserLogin:
       type: object
       properties:
-        newRole:
+        email:
           type: string
-          enum: ['guide', 'admin', 'participant']
-          example: 'guide'
-          description: Новая роль пользователя
-      required:
-        - newRole
-        
-    City: 
-      type: string 
-      enum:
-        - Воронеж
-        - Москва
-        - Санкт-Петербург
+          format: email
+        password:
+          type: string
+          format: password
 
-    Country: 
-      type: string 
-      enum:
-        - Россия
-    
+    AuthToken:
+      type: object
+      properties:
+        access_token:
+          type: string
+          description: JWT токен для авторизации
+
+    ErrorResponse:
+      type: object
+      properties:
+        error:
+          type: string
+          description: Сообщение об ошибке          
+
+  Guide:
+    type: object
+    description: Профиль экскурсовода
+    required:
+      - guideID
+      - guideName
+    properties:
+      guideID:
+        type: integer
+        readOnly: true
+      guideName:
+        type: string
+      availableLanguages:
+        type: array
+        items: 
+          $ref: '#/components/schemas/Language'
+        description: 
+          Языки которыми владеет экскурсовод
+      guideRating:
+        readOnly: true
+        type: number
+        description: 
+          рейтинг экскурсовода
+      guideNumberOfTour:
+        readOnly: true
+        type: integer
+        description: 
+          количество проведенных экскурсий
+      guidePhotoProfile:
+        type: string
+        description: 
+          Аватарка на профиле гида
+      guidePhoto: 
+        type: array
+        items: 
+          type: string
+        description: остальные фото в профиле
+
+  Tour: 
+    type: object
+    description: 
+      Экскурсия
+    required:
+      - tourID 
+      - tourName 
+      - tourSummary 
+      - duration 
+      - ageLimit 
+      - availableLanguages 
+      - costs 
+      - shedule 
+      - transportType 
+    properties: 
+      tourID: 
+        type: integer
+        readOnly: true
+      tourName:
+        type: string
+      tourSummary: 
+        type: string
+        description: 
+          Краткое описание экскурсии
+      tourDescription:
+        type: string
+        description: 
+          Полное описание экскурсии
+      duration:
+        type: integer
+        description: 
+          Длительность экскурсии (в минутах)
+      hardwareRequirements: 
+        type: string
+        description: 
+          Требования к оборудованию (в виде текстового описания)
+      safetyRequirements: 
+        type: string
+        description: 
+          Требования по безопасности (в виде текстового описания)
+      healthRestrictions: 
+        type: string 
+        description: 
+          Ограничения по здоровью (в виде текстового описания)
+      ageLimit: 
+        $ref: '#/components/schemas/AgeLimit'
+      availableLanguages:
+        type: array
+        description: 
+          Список поддерживаемых языков
+        items: 
+          $ref: '#/components/schemas/Language'
+      costs: 
+        type: array
+        description: 
+          Тарифы на экскурсионные группы
+        items:
+          $ref: '#/components/schemas/GroupSizeCosts'
+      transportType: 
+        $ref: '#/components/schemas/TourTransportType'
+      photos: 
+        type: array
+        items: 
+          type: string
+          example: https://opentest.info/photo.jpg
+      
+  AgeLimit: 
+    type: integer
+    description: 
+      Возрастное ограничение (минимальный возраст)
+    enum: 
+      - 0
+      - 6
+      - 12
+      - 16
+      - 18
+
+  Language: 
+    type: string 
+    description: 
+      Язык
+    enum: 
+      - Русский
+      - English
+
+  GroupSizeCosts:
+    type: object
+    description: 
+      Цена экскурсии для указанного размера группы
+    required:
+      - cost 
+      - minGroupSize 
+      - maxGroupSize 
+    properties:
+      cost: 
+        $ref: '#/components/schemas/Cost'
+      minGroupSize: 
+        type: integer
+        description: 
+          Минимальный размер группы
+      maxGroupSize: 
+        type: integer 
+        description: 
+          Максимальный размер экскурсионной группы
+      costsDescription: 
+        type: string 
+        description: 
+          Описание услуг (что входит в цену)
+      extraCosts: 
+        type: string
+        description: 
+          Описание дополнительных расходов 
+
+  Cost: 
+    type: object
+    description: 
+      Цена
+    required:
+      - numCost 
+      - currency
+    properties:
+      numCost: 
+        type: number
+        description: 
+          Цена в целых единицах валюты
+      currency: 
+        $ref: '#/components/schemas/Currency'
+
+  Currency:
+    type: string 
+    description: 
+      Наименование валюты
+    enum:
+      - RUB
+      - USD
+
+  TourTransportType: 
+    type: string
+    description: 
+      Тип транспорта
+    enum: 
+      - walking
+      - scooter
+      - bus
+
+  TourDayStatus: 
+    type: string 
+    description: 
+      Статус экскурсионного дня
+    enum:
+      - free
+      - occupied
+
+  TourDay: 
+    type: object
+    description: 
+      Экскурсионный день
+    required:
+      - date 
+      - status
+    properties:
+      date: 
+        type: string 
+        format: date 
+      status: 
+        $ref: '#/components/schemas/TourDayStatus'
+
+  User:
+    type: object
+    properties:
+      userName:
+        type: string
+        example: 'john doe'
+        description: Имена участников
+      userRole:
+        type: string
+        enum: ['guide', 'admin', 'participant']
+        example: 'guide'
+        description: Роли участников
+      user_id:
+        type: string
+        example: 'user_12345'
+        description: Идентификатор пользователя
+    required:
+      - userName
+      - userRole
+      - user_id
+
+  Backup:
+    type: object
+    properties:
+      backupID:
+        type: string
+        example: 'backup_12345'
+        description: Идентификатор резервной копии
+      createTime:
+        type: string
+        format: date-time
+        example: '2025-03-03T12:00:00Z'
+        description: Время создания резервной копии
+      status:
+        type: string
+        enum: ['created', 'restoring', 'failed']
+        example: 'created'
+        description: Статус резервной копии
+    required:
+      - backupID
+      - createTime
+      - status
+
+  UserRoleUpdate:
+    type: object
+    properties:
+      newRole:
+        type: string
+        enum: ['guide', 'admin', 'participant']
+        example: 'guide'
+        description: Новая роль пользователя
+    required:
+      - newRole
+      
+  City: 
+    type: string 
+    enum:
+      - Воронеж
+      - Москва
+      - Санкт-Петербург
+
+  Country: 
+    type: string 
+    enum:
+      - Россия
+  
