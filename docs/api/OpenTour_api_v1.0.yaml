@@ -938,75 +938,75 @@ components:
       status: 
         $ref: '#/components/schemas/TourDayStatus'
 
-User:
-  description: Пользователь системы
-  type: object
-  properties:
-    userName:
-      type: string
-      example: 'john doe'
-      description: Имена участников
-    userRole:
-      type: string
-      enum: ['guide', 'admin', 'participant']
-      example: 'guide'
-      description: Роли участников
-    user_id:
-      type: string
-      example: 'user_12345'
-      description: Идентификатор пользователя
-    email:
-      type: string
-      format: email
-      example: 'john.doe@example.com'
-      description: Электронная почта пользователя
-  required:
-    - userName
-    - userRole
-    - user_id
-
-  Backup:
+  User:
+    description: Пользователь системы
     type: object
     properties:
-      backupID:
+      userName:
         type: string
-        example: 'backup_12345'
-        description: Идентификатор резервной копии
-      createTime:
-        type: string
-        format: date-time
-        example: '2025-03-03T12:00:00Z'
-        description: Время создания резервной копии
-      status:
-        type: string
-        enum: ['created', 'restoring', 'failed']
-        example: 'created'
-        description: Статус резервной копии
-    required:
-      - backupID
-      - createTime
-      - status
-
-  UserRoleUpdate:
-    type: object
-    properties:
-      newRole:
+        example: 'john doe'
+        description: Имена участников
+      userRole:
         type: string
         enum: ['guide', 'admin', 'participant']
         example: 'guide'
-        description: Новая роль пользователя
+        description: Роли участников
+      user_id:
+        type: string
+        example: 'user_12345'
+        description: Идентификатор пользователя
+      email:
+        type: string
+        format: email
+        example: 'john.doe@example.com'
+        description: Электронная почта пользователя
     required:
-      - newRole
-      
-  City: 
-    type: string 
-    enum:
-      - Воронеж
-      - Москва
-      - Санкт-Петербург
+      - userName
+      - userRole
+      - user_id
 
-  Country: 
-    type: string 
-    enum:
-      - Россия
-  
+    Backup:
+      type: object
+      properties:
+        backupID:
+          type: string
+          example: 'backup_12345'
+          description: Идентификатор резервной копии
+        createTime:
+          type: string
+          format: date-time
+          example: '2025-03-03T12:00:00Z'
+          description: Время создания резервной копии
+        status:
+          type: string
+          enum: ['created', 'restoring', 'failed']
+          example: 'created'
+          description: Статус резервной копии
+      required:
+        - backupID
+        - createTime
+        - status
+
+    UserRoleUpdate:
+      type: object
+      properties:
+        newRole:
+          type: string
+          enum: ['guide', 'admin', 'participant']
+          example: 'guide'
+          description: Новая роль пользователя
+      required:
+        - newRole
+        
+    City: 
+      type: string 
+      enum:
+        - Воронеж
+        - Москва
+        - Санкт-Петербург
+
+    Country: 
+      type: string 
+      enum:
+        - Россия
+    
