@@ -955,24 +955,11 @@ User:
       type: string
       example: 'user_12345'
       description: Идентификатор пользователя
-    id:
-      type: integer
-      example: 12345
-      description: Идентификатор пользователя в системе
-    username:
-      type: string
-      example: 'john_doe'
-      description: Логин пользователя в системе
     email:
       type: string
       format: email
       example: 'john.doe@example.com'
       description: Электронная почта пользователя
-    role:
-      type: string
-      enum: ['user', 'guide', 'admin']
-      example: 'guide'
-      description: Роль пользователя в системе
   required:
     - userName
     - userRole
