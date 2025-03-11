@@ -82,7 +82,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/User'
+                $ref: '#/components/schemas/User'
         401:
           description: Требуется аутентификация
           content:
@@ -733,237 +733,237 @@ components:
           type: string
           description: Сообщение об ошибке          
 
-  Guide:
-    type: object
-    description: Профиль экскурсовода
-    required:
-      - guideID
-      - guideName
-    properties:
-      guideID:
-        type: integer
-        readOnly: true
-      guideName:
-        type: string
-      availableLanguages:
-        type: array
-        items: 
-          $ref: '#/components/schemas/Language'
-        description: 
-          Языки которыми владеет экскурсовод
-      guideRating:
-        readOnly: true
-        type: number
-        description: 
-          рейтинг экскурсовода
-      guideNumberOfTour:
-        readOnly: true
-        type: integer
-        description: 
-          количество проведенных экскурсий
-      guidePhotoProfile:
-        type: string
-        description: 
-          Аватарка на профиле гида
-      guidePhoto: 
-        type: array
-        items: 
+    Guide:
+      type: object
+      description: Профиль экскурсовода
+      required:
+        - guideID
+        - guideName
+      properties:
+        guideID:
+          type: integer
+          readOnly: true
+        guideName:
           type: string
-        description: остальные фото в профиле
-
-  Tour: 
-    type: object
-    description: 
-      Экскурсия
-    required:
-      - tourID 
-      - tourName 
-      - tourSummary 
-      - duration 
-      - ageLimit 
-      - availableLanguages 
-      - costs 
-      - shedule 
-      - transportType 
-    properties: 
-      tourID: 
-        type: integer
-        readOnly: true
-      tourName:
-        type: string
-      tourSummary: 
-        type: string
-        description: 
-          Краткое описание экскурсии
-      tourDescription:
-        type: string
-        description: 
-          Полное описание экскурсии
-      duration:
-        type: integer
-        description: 
-          Длительность экскурсии (в минутах)
-      hardwareRequirements: 
-        type: string
-        description: 
-          Требования к оборудованию (в виде текстового описания)
-      safetyRequirements: 
-        type: string
-        description: 
-          Требования по безопасности (в виде текстового описания)
-      healthRestrictions: 
-        type: string 
-        description: 
-          Ограничения по здоровью (в виде текстового описания)
-      ageLimit: 
-        $ref: '#/components/schemas/AgeLimit'
-      availableLanguages:
-        type: array
-        description: 
-          Список поддерживаемых языков
-        items: 
-          $ref: '#/components/schemas/Language'
-      costs: 
-        type: array
-        description: 
-          Тарифы на экскурсионные группы
-        items:
-          $ref: '#/components/schemas/GroupSizeCosts'
-      transportType: 
-        $ref: '#/components/schemas/TourTransportType'
-      photos: 
-        type: array
-        items: 
+        availableLanguages:
+          type: array
+          items: 
+            $ref: '#/components/schemas/Language'
+          description: 
+            Языки которыми владеет экскурсовод
+        guideRating:
+          readOnly: true
+          type: number
+          description: 
+            рейтинг экскурсовода
+        guideNumberOfTour:
+          readOnly: true
+          type: integer
+          description: 
+            количество проведенных экскурсий
+        guidePhotoProfile:
           type: string
-          example: https://opentest.info/photo.jpg
-      
-  AgeLimit: 
-    type: integer
-    description: 
-      Возрастное ограничение (минимальный возраст)
-    enum: 
-      - 0
-      - 6
-      - 12
-      - 16
-      - 18
+          description: 
+            Аватарка на профиле гида
+        guidePhoto: 
+          type: array
+          items: 
+            type: string
+          description: остальные фото в профиле
 
-  Language: 
-    type: string 
-    description: 
-      Язык
-    enum: 
-      - Русский
-      - English
+    Tour: 
+      type: object
+      description: 
+        Экскурсия
+      required:
+        - tourID 
+        - tourName 
+        - tourSummary 
+        - duration 
+        - ageLimit 
+        - availableLanguages 
+        - costs 
+        - shedule 
+        - transportType 
+      properties: 
+        tourID: 
+          type: integer
+          readOnly: true
+        tourName:
+          type: string
+        tourSummary: 
+          type: string
+          description: 
+            Краткое описание экскурсии
+        tourDescription:
+          type: string
+          description: 
+            Полное описание экскурсии
+        duration:
+          type: integer
+          description: 
+            Длительность экскурсии (в минутах)
+        hardwareRequirements: 
+          type: string
+          description: 
+            Требования к оборудованию (в виде текстового описания)
+        safetyRequirements: 
+          type: string
+          description: 
+            Требования по безопасности (в виде текстового описания)
+        healthRestrictions: 
+          type: string 
+          description: 
+            Ограничения по здоровью (в виде текстового описания)
+        ageLimit: 
+          $ref: '#/components/schemas/AgeLimit'
+        availableLanguages:
+          type: array
+          description: 
+            Список поддерживаемых языков
+          items: 
+            $ref: '#/components/schemas/Language'
+        costs: 
+          type: array
+          description: 
+            Тарифы на экскурсионные группы
+          items:
+            $ref: '#/components/schemas/GroupSizeCosts'
+        transportType: 
+          $ref: '#/components/schemas/TourTransportType'
+        photos: 
+          type: array
+          items: 
+            type: string
+            example: https://opentest.info/photo.jpg
+        
+    AgeLimit: 
+      type: integer
+      description: 
+        Возрастное ограничение (минимальный возраст)
+      enum: 
+        - 0
+        - 6
+        - 12
+        - 16
+        - 18
 
-  GroupSizeCosts:
-    type: object
-    description: 
-      Цена экскурсии для указанного размера группы
-    required:
-      - cost 
-      - minGroupSize 
-      - maxGroupSize 
-    properties:
-      cost: 
-        $ref: '#/components/schemas/Cost'
-      minGroupSize: 
-        type: integer
-        description: 
-          Минимальный размер группы
-      maxGroupSize: 
-        type: integer 
-        description: 
-          Максимальный размер экскурсионной группы
-      costsDescription: 
-        type: string 
-        description: 
-          Описание услуг (что входит в цену)
-      extraCosts: 
-        type: string
-        description: 
-          Описание дополнительных расходов 
+    Language: 
+      type: string 
+      description: 
+        Язык
+      enum: 
+        - Русский
+        - English
 
-  Cost: 
-    type: object
-    description: 
-      Цена
-    required:
-      - numCost 
-      - currency
-    properties:
-      numCost: 
-        type: number
-        description: 
-          Цена в целых единицах валюты
-      currency: 
-        $ref: '#/components/schemas/Currency'
+    GroupSizeCosts:
+      type: object
+      description: 
+        Цена экскурсии для указанного размера группы
+      required:
+        - cost 
+        - minGroupSize 
+        - maxGroupSize 
+      properties:
+        cost: 
+          $ref: '#/components/schemas/Cost'
+        minGroupSize: 
+          type: integer
+          description: 
+            Минимальный размер группы
+        maxGroupSize: 
+          type: integer 
+          description: 
+            Максимальный размер экскурсионной группы
+        costsDescription: 
+          type: string 
+          description: 
+            Описание услуг (что входит в цену)
+        extraCosts: 
+          type: string
+          description: 
+            Описание дополнительных расходов 
 
-  Currency:
-    type: string 
-    description: 
-      Наименование валюты
-    enum:
-      - RUB
-      - USD
+    Cost: 
+      type: object
+      description: 
+        Цена
+      required:
+        - numCost 
+        - currency
+      properties:
+        numCost: 
+          type: number
+          description: 
+            Цена в целых единицах валюты
+        currency: 
+          $ref: '#/components/schemas/Currency'
 
-  TourTransportType: 
-    type: string
-    description: 
-      Тип транспорта
-    enum: 
-      - walking
-      - scooter
-      - bus
+    Currency:
+      type: string 
+      description: 
+        Наименование валюты
+      enum:
+        - RUB
+        - USD
 
-  TourDayStatus: 
-    type: string 
-    description: 
-      Статус экскурсионного дня
-    enum:
-      - free
-      - occupied
+    TourTransportType: 
+      type: string
+      description: 
+        Тип транспорта
+      enum: 
+        - walking
+        - scooter
+        - bus
 
-  TourDay: 
-    type: object
-    description: 
-      Экскурсионный день
-    required:
-      - date 
-      - status
-    properties:
-      date: 
-        type: string 
-        format: date 
-      status: 
-        $ref: '#/components/schemas/TourDayStatus'
+    TourDayStatus: 
+      type: string 
+      description: 
+        Статус экскурсионного дня
+      enum:
+        - free
+        - occupied
 
-  User:
-    description: Пользователь системы
-    type: object
-    properties:
-      userName:
-        type: string
-        example: 'john doe'
-        description: Имена участников
-      userRole:
-        type: string
-        enum: ['guide', 'admin', 'participant']
-        example: 'guide'
-        description: Роли участников
-      user_id:
-        type: string
-        example: 'user_12345'
-        description: Идентификатор пользователя
-      email:
-        type: string
-        format: email
-        example: 'john.doe@example.com'
-        description: Электронная почта пользователя
-    required:
-      - userName
-      - userRole
-      - user_id
+    TourDay: 
+      type: object
+      description: 
+        Экскурсионный день
+      required:
+        - date 
+        - status
+      properties:
+        date: 
+          type: string 
+          format: date 
+        status: 
+          $ref: '#/components/schemas/TourDayStatus'
+
+    User:
+      description: Пользователь системы
+      type: object
+      properties:
+        userName:
+          type: string
+          example: 'john doe'
+          description: Имена участников
+        userRole:
+          type: string
+          enum: ['guide', 'admin', 'participant']
+          example: 'guide'
+          description: Роли участников
+        user_id:
+          type: string
+          example: 'user_12345'
+          description: Идентификатор пользователя
+        email:
+          type: string
+          format: email
+          example: 'john.doe@example.com'
+          description: Электронная почта пользователя
+      required:
+        - userName
+        - userRole
+        - user_id
 
     Backup:
       type: object
