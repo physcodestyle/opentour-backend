@@ -235,7 +235,7 @@ paths:
                 description: 
                   Список дней с указанием статуса
                 items:
-                  $ref: '#/components/schemas/TourDay'
+                  $ref: '#/components/schemas/SheduleTourDay'
     put: 
       summary: Изменить расписание тура
       tags: 
@@ -254,7 +254,7 @@ paths:
                 description: 
                   Список дней с указанием статуса
                 items:
-                  $ref: '#/components/schemas/TourDay'
+                  $ref: '#/components/schemas/SheduleTourDay'
       responses: 
         200: 
           description: OK
@@ -697,54 +697,74 @@ components:
 
   schemas:
 
+    UserLogin:
+      type: object
+      description: Учётные данные пользователя
+      required: 
+        - email
+        - password
+      properties:
+        email:
+          type: string
+          format: email
+          writeOnly: true
+        password:
+          type: string
+          format: password
+          writeOnly: true
+
     UserRegistration:
       type: object
+      description: Данные для регистрации пользователя
+      allOf: 
+        - $ref: '#/components/schemas/UserLogin'
+      required: 
+        - username
       properties:
         username:
           type: string
-        email:
-          type: string
-          format: email
-        password:
-          type: string
-          format: password
 
-    UserLogin:
+    User:
+      description: Пользователь системы
       type: object
+      required:
+        - userID
+        - userName
+        - userRoles
+        - regDate
       properties:
-        email:
+        userID:
+          type: integer
+          example: 123
+          description: Сквозной идентификатор пользователя
+          readOnly: true
+        userName:
           type: string
-          format: email
-        password:
+          example: 'john doe'
+          description: Имя пользователя
+        about: 
+          type: string 
+          description: Раздел о себе
+        userRoles:
+          type: array
+          items:
+            type: string
+            enum: ['guide', 'admin', 'participant']
+            example: 'guide'
+          description: Роли участника
+          readOnly: true
+        regDate: 
           type: string
-          format: password
-
-    AuthToken:
-      type: object
-      properties:
-        access_token:
-          type: string
-          description: JWT токен для авторизации
-
-    ErrorResponse:
-      type: object
-      properties:
-        error:
-          type: string
-          description: Сообщение об ошибке          
+          format: date-time
+          description: Время регистрации пользователя
+          readOnly: true
 
     Guide:
       type: object
       description: Профиль экскурсовода
-      required:
-        - guideID
-        - guideName
+      allOf:
+        - $ref: '#/components/schemas/User'
       properties:
-        guideID:
-          type: integer
-          readOnly: true
-        guideName:
-          type: string
         availableLanguages:
           type: array
           items: 
@@ -765,11 +785,46 @@ components:
           type: string
           description: 
             Аватарка на профиле гида
-        guidePhoto: 
+        guidePhotos: 
           type: array
           items: 
             type: string
           description: остальные фото в профиле
+
+    AuthToken:
+      type: object
+      properties:
+        access_token:
+          type: string
+          description: JWT токен для авторизации
+          readOnly: true
+
+    ErrorResponse:
+      type: object
+      properties:
+        error:
+          type: string
+          description: Сообщение об ошибке          
+
+    Booking: 
+      type: object
+      description: 
+        Бронирование экскурсии
+      properties: 
+        bookingID: 
+          type: integer
+          readOnly: true
+        userID: 
+          type: integer
+          description: 
+            Идентификатор пользователя, осуществляющего бронирование
+          readOnly: true
+        tourID: 
+          type: integer 
+        sessionID: 
+          type: integer
+        tariffID: 
+          type: integer
 
     Tour: 
       type: object
@@ -828,7 +883,7 @@ components:
           description: 
             Тарифы на экскурсионные группы
           items:
-            $ref: '#/components/schemas/GroupSizeCosts'
+            $ref: '#/components/schemas/Tariff'
         transportType: 
           $ref: '#/components/schemas/TourTransportType'
         photos: 
@@ -856,15 +911,20 @@ components:
         - Русский
         - English
 
-    GroupSizeCosts:
+    Tariff:
       type: object
       description: 
-        Цена экскурсии для указанного размера группы
+        Тариф на экскурсию. Может быть персональным и общим, при этом группы могут быть разных размеров
       required:
         - cost 
         - minGroupSize 
         - maxGroupSize 
       properties:
+        tariffID: 
+          type: integer 
+          description: 
+            Идентификатор тарифа
+          readOnly: true
         cost: 
           $ref: '#/components/schemas/Cost'
         minGroupSize: 
@@ -883,6 +943,11 @@ components:
           type: string
           description: 
             Описание дополнительных расходов 
+        isPersonal:
+          type: string
+          format: boolean
+          description:
+            Флаг персонального тарифа - группа только ваша
 
     Cost: 
       type: object
@@ -916,54 +981,46 @@ components:
         - scooter
         - bus
 
-    TourDayStatus: 
-      type: string 
-      description: 
-        Статус экскурсионного дня
-      enum:
-        - free
-        - occupied
-
-    TourDay: 
+    SheduleTourDay: 
       type: object
       description: 
         Экскурсионный день
       required:
         - date 
-        - status
+        - availableSessions
       properties:
         date: 
           type: string 
           format: date 
-        status: 
-          $ref: '#/components/schemas/TourDayStatus'
+        availableSessions:
+          type: array 
+          items: 
+            $ref: '#/components/schemas/SheduleTourSession'
 
-    User:
-      description: Пользователь системы
+    SheduleTourSession: 
       type: object
-      properties:
-        userName:
-          type: string
-          example: 'john doe'
-          description: Имена участников
-        userRole:
-          type: string
-          enum: ['guide', 'admin', 'participant']
-          example: 'guide'
-          description: Роли участников
-        user_id:
-          type: string
-          example: 'user_12345'
-          description: Идентификатор пользователя
-        email:
-          type: string
-          format: email
-          example: 'john.doe@example.com'
-          description: Электронная почта пользователя
+      description: 
+        Экскурсионное окно
       required:
-        - userName
-        - userRole
-        - user_id
+        - sessionID
+        - startTime
+        - endTime
+        - availavbleTariffs
+      properties: 
+        sessionID: 
+          type: integer
+        startTime: 
+          type: string
+          format: time 
+        endTime: 
+          type: string 
+          format: time 
+        availavbleTariffs: 
+          type: array
+          items: 
+            type: integer
+          description: 
+            Список идентификаторов доступных тарифов
 
     Backup:
       type: object
@@ -1009,4 +1066,239 @@ components:
       type: string 
       enum:
         - Россия
-    
+
+    UserRole: 
+      type: string
+      enum: 
+        - participant
+        - guide
+        - admin
+
+    Review:
+      description: Отзыв
+      type: object
+      required: 
+        - reviewID
+        - authorID 
+        - reviewScore
+        - createdAt
+      properties:
+        reviewID: 
+          type: integer
+          description: Идентификатор отзыва
+          readOnly: true
+        authorID:
+          type: integer
+          description: 
+            Идентификатор пользователя, оставившего отзыв
+          readOnly: true
+        reviewTitle: 
+          type: string
+          description: 
+            Заголовок отзыва
+        reviewText: 
+          type: string
+          description: 
+            Текст отзыва
+        reviewScore: 
+          type: number
+          description: 
+            Оценка
+        upvotes:
+          type: integer
+          description: 
+            Количество положительных отметок отзыва
+          readOnly: true
+        downvotes: 
+          type: integer
+          description: 
+            количество отрицательных оценок отзыва
+          readOnly: true
+        createdAt: 
+          type: string
+          format: date-time
+          readOnly: true
+        updatedAt:
+          type: string
+          format: date-time
+          readOnly: true
+
+    ReviewComment:
+      type: object
+      description: 
+        Ответ на комментарий
+      required: 
+        - commentID 
+        - authorID 
+        - reviewID 
+        - commentText
+        - createdAt
+      properties: 
+        commentID: 
+          type: integer
+          readOnly: true
+        authorID: 
+          type: integer
+          readOnly: true
+        reviewID: 
+          type: integer
+        commentText: 
+          type: string
+        createdAt: 
+          type: string
+          format: date-time
+          readOnly: true
+        
+    Note: 
+      type: object 
+      description: Заметка
+      required: 
+        - noteID
+        - authorID 
+        - noteTitle 
+        - noteText
+        - createdAt
+      properties: 
+        noteID: 
+          type: integer
+          description: 
+            Идентификатор заметки
+          readOnly: true
+        authorID: 
+          type: integer
+          description: 
+            Идентификатор автора заметки
+          readOnly: true
+        noteTitle: 
+          type: string 
+          description: 
+            Заголовок заметки
+        noteText: 
+          type: string
+          description: 
+            Текст заметки
+        createdAt: 
+          type: string 
+          format: date-time
+          description:
+            Время создания заметки
+          readOnly: true
+        updatedAt: 
+          type: string
+          format: date-time
+          description: 
+            Время изменения заметки
+          readOnly: true
+        timeframe:
+          $ref: '#/components/schemas/Timeframe'
+        tourID: 
+          type: integer
+          description: 
+            Связанная экскурсия
+
+    Timeframe:
+      type: object
+      description: 
+        Временной отрезок
+      required: 
+        - startTime
+      properties: 
+        startTime:
+          type: string
+          format: date-time
+          description: 
+            Время начала
+        endTime: 
+          type: string
+          format: date-time
+          description: 
+            Время окончания
+        isPoint: 
+          type: string
+          format: boolean
+          description: 
+            Если отсутствует время окончания и `isPoint=true`, временной отрезок считается точкой
+  
+    Chat: 
+      type: object
+      required: 
+        - chatID
+        - chatName
+        - members
+      description: 
+        Чат
+      properties: 
+        chatID: 
+          type: integer
+          readOnly: true
+        chatName: 
+          type: string
+        members: 
+          type: array
+          items: 
+            $ref: '#/components/schemas/User'
+
+    Message: 
+      type: object
+      description: 
+        Объект сообщения, общая схема
+      required: 
+        - messageID
+        - authorID
+        - text
+        - sequence
+        - createAt
+      properties: 
+        messageID: 
+          type: integer
+          description: 
+            Идентификатор сообщения
+          readOnly: true
+        authorID: 
+          type: integer
+          description: 
+            Идентификатор автора сообщения
+          readOnly: true
+        text: 
+          type: string
+          description: 
+            Текстовое содержимое сообщения
+        sequence: 
+          type: integer
+          description: 
+            Порядковый номер сообщения в чате
+          readOnly: true
+        createAt: 
+          type: string 
+          format: date-time
+          readOnly: true
+        updateAt:
+          type: string
+          format: date-time
+          readOnly: true
+
+    ChatMessage: 
+      type: object
+      description: 
+        Сообщение в чате
+      allOf: 
+        - $ref: '#/components/schemas/Message'
+      required: 
+        - chatID
+      properties: 
+        chatID: 
+          type: integer
+          description: 
+            Идентификатор чата
+        
+    PrivateMessage:
+      type: object
+      description: 
+        Личное сообщение
+      allOf: 
+        - $ref: '#/components/schemas/Message'
+      properties: 
+        recipientID: 
+          type: integer
+          description: 
+            Идентификатор получателя
