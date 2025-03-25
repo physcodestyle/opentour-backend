@@ -84,7 +84,7 @@ jobs:
         id: set_tag
         run: |
           if [ -z "${{ steps.meta.output.tags }}" ]; then
-            TAG="${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:temp-${GITHUB_SHA:8}-$(data +%s)"
+            TAG="${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:temp-${GITHUB_SHA:8}-$(date +%s)"
           else
             TAG="${{ steps.meta.outputs.tags }}"
           fi
