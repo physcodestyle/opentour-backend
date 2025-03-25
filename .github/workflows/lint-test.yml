@@ -97,6 +97,8 @@ jobs:
           context: .
           file: ./docker/Dockerfile
           push: false
+          pull: true
           load: true
           builder: ${{ steps.buildx.outputs.name }}
           tags: "${{ steps.set_tag.outputs.tag }}"
+          labels: "${{ steps.meta.outputs.labels }}"
