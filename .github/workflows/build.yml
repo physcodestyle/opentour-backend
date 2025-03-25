@@ -1,10 +1,14 @@
-name: lint-test
+name: build
 
 on:
   push:
     branches: [ dev ]
   pull_request:
     branches: [ main, dev]
+  workflow_run:
+    workflows: [lint-test]
+    types:
+      - completed
 
 env:
   REGISTRY: ghcr.io
