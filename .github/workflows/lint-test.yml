@@ -48,4 +48,4 @@ jobs:
           pip install pytest
 
       - name: Run pytest to test code
-        run: pytest -v -s test/
+        run: pytest -v -s tests/
