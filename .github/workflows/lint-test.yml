@@ -1,0 +1,31 @@
+name: lint-test
+
+on:
+  push:
+    branches: [ dev ]
+  pull_request:
+    branches: [ main, dev]
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.x'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install -r requirements.txt
+          pip install mypy ruff
+
+      - name: Run ruff lint
+        run: ruff check
+
+      - name: Run mypy lint
+        run: mypy --install-types --non-interactive ./app
