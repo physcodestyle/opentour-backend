@@ -3,21 +3,17 @@ name: build
 on:
   push:
     branches: [ dev ]
-  pull_request:
-    branches: [ main, dev]
-  workflow_run:
-    workflows: [lint-test]
-    types:
-      - completed
 
 env:
   REGISTRY: ghcr.io
   IMAGE_NAME: ${{ github.repository }}
 
 jobs:
+  lint-test:
+    uses: ./.github/workflows/lint-test.yml
   build:
     runs-on: ubuntu-latest
-    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    needs: ['lint-test']
     permissions:
       packages: write
       contents: read
