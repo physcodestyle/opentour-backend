@@ -170,7 +170,7 @@ paths:
       parameters:
         - name: tour_id
           in: path
-          required: true 
+          required: true
           schema: 
             type: integer
       responses: 
@@ -258,6 +258,22 @@ paths:
       responses: 
         200: 
           description: OK
+
+  /guids:
+    post:
+      summary: Создать профиль гида
+      tags: 
+        - Guids
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Guide'
+      responses:
+        201:        
+          description: Успешно созданно   
+        400:
+          description: Ошибка в запросе
           
   /guids/{guide_id}:
     get:
@@ -294,20 +310,6 @@ paths:
           description: OK
         404:
             description: Не найдено   
-    post:
-      summary: Создать профиль гида
-      tags: 
-        - Guids
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/Guide'
-      responses:
-        201:        
-          description: Успешно созданно   
-        400:
-          description: Ошибка в запросе
     put:
       summary: изменение профиля гида
       tags: 
@@ -322,13 +324,327 @@ paths:
         content:
           application/json:
               schema:
-                type: array
-                $ref: '#/components/schemas/Guide'
+                  $ref: '#/components/schemas/Guide'
       responses:          
         200:
           description: OK        
         404:
           description: Не найдено
+
+  /chats:
+    get: 
+      summary: Получить список чатов текущего пользователя
+      tags:
+        - Chats
+      responses: 
+        200: 
+          description: OK 
+          content:
+            application/json: 
+              schema:
+                $ref: '#/components/schemas/Chat'
+    post: 
+      summary: Создать чат
+      tags:
+        - Chats
+      requestBody: 
+        content:
+          application/json: 
+            schema: 
+              $ref: '#/components/schemas/Chat'
+      responses: 
+        201: 
+          description: OK 
+
+  /chats/{chat_id}:
+    get: 
+      summary: Получить чат по идентификатору
+      tags:
+        - Chats
+      parameters: 
+        - name: chat_id
+          in: path
+          required: true
+          schema: 
+            type: integer
+      responses: 
+        200: 
+          description: OK 
+          content:
+            application/json: 
+              schema:
+                $ref: '#/components/schemas/Chat'
+    put: 
+      summary: Редактировать чат
+      parameters: 
+        - name: chat_id
+          in: path
+          required: true
+          schema: 
+            type: integer
+      tags:
+        - Chats
+      requestBody: 
+        content:
+          application/json: 
+            schema: 
+              $ref: '#/components/schemas/Chat'
+      responses: 
+        201: 
+          description: OK 
+    delete: 
+      summary: Удалить чат
+      parameters: 
+        - name: chat_id
+          in: path
+          required: true
+          schema: 
+            type: integer
+      tags:
+        - Chats
+      responses: 
+        200: 
+          description: OK 
+
+  /chats/{chat_id}/messages:
+    get: 
+      summary: получить сообщения из чата
+      tags:
+        - Chats
+      parameters: 
+        - name: chat_id
+          in: path
+          required: true
+          schema: 
+            type: integer
+        - name: lastSequence
+          in: query
+          required: false
+          description: С какого порядкового номера получать сообщения. 
+            При значении -1 получаются последние `count` сообщений
+          schema: 
+            type: integer
+            default: 0
+        - name: count 
+          in: query 
+          required: false
+          description: Количество сообщений
+          schema: 
+            type: integer
+            default: 100
+      responses: 
+        200: 
+          description: OK 
+          content:
+            application/json: 
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ChatMessage'
+    post: 
+      summary: Отправить сообщение в чат
+      tags:
+        - Chats
+      parameters: 
+        - name: chat_id
+          in: path
+          required: true
+          schema: 
+            type: integer
+      requestBody: 
+        content:
+          application/json:
+            schema: 
+              $ref: '#/components/schemas/ChatMessage'
+
+  /tours/{tour_id}/feedback: 
+    post: 
+      summary: Оставить отзыв о туре
+      tags:
+        - Feedback
+        - Tours
+      parameters:
+        - name: tour_id
+          in: path
+          required: true
+          schema: 
+            type: integer
+      requestBody: 
+        content:
+          application/json:
+            schema: 
+              $ref: '#/components/schemas/Review'
+      responses:
+        201: 
+          description: OK
+    get: 
+      summary: Получить отзывы о туре
+      tags:
+        - Feedback
+        - Tours
+      parameters:
+        - name: tour_id
+          in: path
+          required: true
+          schema: 
+            type: integer
+        - name: count 
+          in: query
+          required: false 
+          description: 
+            Число отзывов в списке
+          schema: 
+            type: integer
+            default: 50
+        - name: offset
+          in: query
+          required: false
+          description: 
+            Сдвиг от начала списка (для постраничной выборки)
+          schema: 
+            type: integer
+            default: 0 
+        - name: ordering
+          in: query
+          required: false
+          schema: 
+            type: string 
+            enum:
+              - scoreAsc 
+              - scoreDesc
+              - fresh
+              - old
+            default: 
+              fresh
+      responses:
+        200: 
+          description: OK
+          content:
+            application/json:
+              schema: 
+                type: array
+                items: 
+                  $ref: '#/components/schemas/Review'
+
+  /tours/{tour_id}/notes: 
+    get: 
+      summary: Получить заметки тура
+      tags:
+        - Knowledge Base
+        - Tours
+      parameters:
+        - name: tour_id
+          in: path
+          required: true
+          schema: 
+            type: integer
+        - name: count 
+          in: query
+          required: false 
+          description: 
+            Число заметок в списке
+          schema: 
+            type: integer
+            default: 50
+        - name: offset
+          in: query
+          required: false
+          description: 
+            Сдвиг от начала списка (для постраничной выборки)
+          schema: 
+            type: integer
+            default: 0     
+      responses:
+        200: 
+          description: OK
+          content:
+            application/json:
+              schema: 
+                type: array 
+                items: 
+                  $ref: '#/components/schemas/Note'
+    post: 
+      summary: Добавить заметку к туру
+      tags:
+        - Knowledge Base
+        - Tours
+      parameters:
+        - name: tour_id
+          in: path
+          required: true
+          schema: 
+            type: integer
+      requestBody: 
+        content:
+          application/json:
+            schema: 
+              $ref: '#/components/schemas/Note'
+      responses:
+        200: 
+          description: OK
+
+  /feedbacks/{feedback_id}: 
+    delete: 
+      summary: Удалить отзыв
+      tags:
+        - Feedback
+      parameters:
+        - name: feedback_id
+          in: path
+          required: true
+          schema: 
+            type: integer
+      responses:
+        200: 
+          description: OK
+
+  /knowbase: 
+    get:
+      summary: Получить заметки из базы знаний текущего пользователя
+      tags:
+        - Knowledge Base
+      responses:
+        200: 
+          description: OK
+          content:
+            application/json:
+              schema: 
+                type: array 
+                items: 
+                  $ref: '#/components/schemas/Note'
+
+  /knowbase/{note_id}: 
+    delete: 
+      summary: Удалить заметку 
+      tags:
+        - Knowledge Base
+      parameters:
+        - name: note_id
+          in: path
+          required: true
+          schema: 
+            type: integer
+      responses:
+        200: 
+          description: OK
+    put: 
+      summary: Изменить заметку 
+      tags:
+        - Knowledge Base
+      parameters:
+        - name: note_id
+          in: path
+          required: true
+          schema: 
+            type: integer
+      requestBody: 
+        content:
+          application/json:
+            schema: 
+              $ref: '#/components/schemas/Note'
+      responses:
+        201: 
+          description: OK
 
   /admin/users:
     get:
@@ -1288,6 +1604,7 @@ components:
       properties: 
         chatID: 
           type: integer
+          readOnly: true
           description: 
             Идентификатор чата
         
