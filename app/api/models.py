@@ -26,10 +26,8 @@ class UserRole(Enum):
 
 
 class User(BaseModel):
-    userID: int = Field(
-        ..., description='Сквозной идентификатор пользователя', example=123
-    )
-    userName: str = Field(description='Имя пользователя', example='john doe')
+    userID: int = Field(description='Сквозной идентификатор пользователя', examples=['123'])
+    userName: str = Field(description='Имя пользователя', examples=['john doe'])
     about: Optional[str] = Field(None, description='Раздел о себе')
     userRoles: List[UserRole] = Field(description='Роли участника')
     regDate: datetime = Field(description='Время регистрации пользователя')
@@ -94,13 +92,13 @@ class Status(Enum):
 
 class Backup(BaseModel):
     backupID: str = Field(
-        description='Идентификатор резервной копии', example='backup_12345'
+        description='Идентификатор резервной копии', examples=['backup_12345']
     )
     createTime: datetime = Field(
         description='Время создания резервной копии',
-        example='2025-03-03T12:00:00Z',
+        examples=['2025-03-03T12:00:00Z'],
     )
-    status: Status = Field(..., description='Статус резервной копии', example='created')
+    status: Status = Field(description='Статус резервной копии', examples=['created'])
 
 
 class NewRole(Enum):
@@ -110,9 +108,7 @@ class NewRole(Enum):
 
 
 class UserRoleUpdate(BaseModel):
-    newRole: NewRole = Field(
-        ..., description='Новая роль пользователя', example='guide'
-    )
+    newRole: NewRole = Field(description='Новая роль пользователя', examples=['guide'])
 
 
 class City(Enum):
@@ -133,9 +129,7 @@ class UserRole1(Enum):
 
 class Review(BaseModel):
     reviewID: int = Field(description='Идентификатор отзыва')
-    authorID: int = Field(
-        ..., description='Идентификатор пользователя, оставившего отзыв'
-    )
+    authorID: int = Field(description='Идентификатор пользователя, оставившего отзыв')
     reviewTitle: Optional[str] = Field(None, description='Заголовок отзыва')
     reviewText: Optional[str] = Field(None, description='Текст отзыва')
     reviewScore: float = Field(description='Оценка')
@@ -205,11 +199,11 @@ class ToursTourIdFeedbackGetResponse(RootModel):
 
 
 class AdminUsersUserIdDeleteResponse(BaseModel):
-    message: str = Field(example='Пользователь user_12345 успешно удален')
+    message: str = Field(examples=['Пользователь user_12345 успешно удален'])
 
 
 class AdminUsersUserIdPutResponse(BaseModel):
-    message: str = Field(example='Роль пользователя user_12345 изменена на guide')
+    message: str = Field(examples=['Роль пользователя user_12345 изменена на guide'])
 
 
 class Level(Enum):
@@ -222,67 +216,67 @@ class Level(Enum):
 
 class AdminLogsGetResponseItem(BaseModel):
     timeStamp: datetime = Field(
-        description='Время события', example='2025-03-03T12:00:00Z'
+        description='Время события', examples=['2025-03-03T12:00:00Z']
     )
-    level: Level = Field(description='Уровень важности лога', example='INFO')
+    level: Level = Field(description='Уровень важности лога', examples=['INFO'])
     message: str = Field(
         description='Сообщение лога',
-        example='Пользователь успешно вошел в систему',
+        examples=['Пользователь успешно вошел в систему'],
     )
     user_id: str = Field(
         description='Идентификатор пользователя, вызвавшего событие',
-        example='user_12345',
+        examples=['user_12345'],
     )
 
 
 class AdminLogsDeleteResponse(BaseModel):
-    message: str = Field(example='Логи успешно очищены')
+    message: str = Field(examples=['Логи успешно очищены'])
 
 
 class AdminBackupPostResponse(BaseModel):
-    message: str = Field(example='Резервная копия успешно создана')
+    message: str = Field(examples=['Резервная копия успешно создана'])
 
 
 class AdminBackupRestorePostRequest(BaseModel):
     backupID: str = Field(
         description='Идентификатор резервной копии для восстановления',
-        example='backup_12345',
+        examples=['backup_12345'],
     )
 
 
 class AdminBackupRestorePostResponse(BaseModel):
     message: str = Field(
-        example='Данные успешно восстановлены из резервной копии backup_12345'
+        examples=['Данные успешно восстановлены из резервной копии backup_12345']
     )
 
 
 class AdminAnalyticsUsersGetResponse(BaseModel):
     totalUsers: int = Field(
-        description='Общее количество пользователей', example=1500
+        description='Общее количество пользователей', examples=['1500']
     )
     activeUsers: int = Field(
-        description='Количество активных пользователей', example=1000
+        description='Количество активных пользователей', examples=['1000']
     )
     inactiveUsers: int = Field(
-        description='Количество неактивных пользователей', example=500
+        description='Количество неактивных пользователей', examples=['500']
     )
 
 
 class AdminAnalyticsContentGetResponse(BaseModel):
-    totalNotes: int = Field(description='Общее количество заметок', example=200)
-    totalTours: int = Field(description='Общее количество экскурсий', example=50)
+    totalNotes: int = Field(description='Общее количество заметок', examples=['200'])
+    totalTours: int = Field(description='Общее количество экскурсий', examples=['50'])
     contentInteraction: int = Field(
         description='Общее количество взаимодействий с контентом (просмотры, лайки, комментарии и т.д.)',
-        example=10000,
+        examples=[10000],
     )
 
 
 class AdminAnalyticsSystemGetResponse(BaseModel):
     errorsLast24h: int = Field(
-        description='Количество ошибок за последние 24 часа', example=5
+        description='Количество ошибок за последние 24 часа', examples=['5']
     )
     totalRequests: int = Field(
-        description='Общее количество запросов к системе', example=100000
+        description='Общее количество запросов к системе', examples=['100000']
     )
 
 
