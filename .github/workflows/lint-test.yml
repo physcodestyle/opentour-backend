@@ -11,6 +11,8 @@ env:
 
 jobs:
   lint:
+    env:
+      MYPYPATH: app/
     runs-on: ubuntu-latest
 
     steps:
@@ -31,13 +33,12 @@ jobs:
         run: ruff check
 
       - name: Run mypy lint
-        run: |
-          export MYPYPATH=app/
-          mypy --install-types --non-interactive --explicit-package-bases ./app
+        run: mypy --install-types --non-interactive --explicit-package-bases ./app
 
   test:
     runs-on: ubuntu-latest
-
+    env:
+      PYTHONPATH: ./app
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
@@ -52,5 +53,5 @@ jobs:
           python -m pip install -r requirements.txt
           pip install pytest
 
-      # - name: Run pytest to test code
-      #   run: pytest -v -s tests/
+      - name: Run pytest to test code
+        run: pytest -v -s tests/
