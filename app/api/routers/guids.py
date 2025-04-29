@@ -4,7 +4,7 @@
 
 from fastapi import APIRouter
 
-from ..dependencies import *
+from ..dependencies import Guide, Optional
 
 router = APIRouter(tags=['Guids'])
 

@@ -4,7 +4,7 @@
 
 from fastapi import APIRouter
 
-from ..dependencies import *
+from ..dependencies import KnowbaseGetResponse, Optional, ToursTourIdNotesGetResponse, Note
 
 router = APIRouter(tags=['Knowledge Base'])
 

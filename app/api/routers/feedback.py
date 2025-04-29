@@ -4,7 +4,7 @@
 
 from fastapi import APIRouter
 
-from ..dependencies import *
+from ..dependencies import Review, ToursTourIdFeedbackGetResponse, Optional, Ordering
 
 router = APIRouter(tags=['Feedback'])
 

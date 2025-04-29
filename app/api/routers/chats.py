@@ -4,7 +4,7 @@
 
 from fastapi import APIRouter
 
-from ..dependencies import *
+from ..dependencies import Chat, Optional, ChatsChatIdMessagesGetResponse, ChatMessage, Query
 
 router = APIRouter(tags=['Chats'])
 

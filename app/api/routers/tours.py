@@ -4,7 +4,8 @@
 
 from fastapi import APIRouter
 
-from ..dependencies import *
+from ..dependencies import ToursGetResponse, Optional, Country, City, AgeLimit, Query, List, TourTransportType
+from ..dependencies import Tour, ToursTourIdSheduleGetResponse, SheduleTourDay
 
 router = APIRouter(tags=['Tours'])
 

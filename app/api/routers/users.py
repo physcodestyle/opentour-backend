@@ -4,7 +4,7 @@
 
 from fastapi import APIRouter
 
-from ..dependencies import *
+from ..dependencies import AuthToken, ErrorResponse, UserLogin, Optional, Union, User, UserRegistration
 
 router = APIRouter(tags=['Users'])
 
