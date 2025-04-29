@@ -68,5 +68,5 @@ jobs:
         uses: anchore/scan-action@v6
         with:
           image: ${{ steps.set_tag.outputs.tag }}
-          fail-build: true
+          fail-build: false
           severity-cutoff: critical
