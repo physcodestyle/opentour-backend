@@ -4,6 +4,7 @@
 
 from fastapi import FastAPI
 import uvicorn
+import os
 
 from api.routers import (
     chats,
@@ -29,6 +30,9 @@ app.include_router(tours.router)
 app.include_router(users.router)
 
 
+HOST = os.environ.get('PORT', 8000)
+PORT = os.environ.get('HOST', "localhost")
+
 @app.get("/")
 async def root():
     return {"is_working": True}
@@ -38,6 +42,6 @@ if __name__ == "__main__":
     uvicorn.run(
         "main:app", 
         reload=True, 
-        host='localhost', 
-        port=80
+        host=HOST, 
+        port=PORT
         )
