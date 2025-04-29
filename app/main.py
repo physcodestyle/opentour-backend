@@ -30,8 +30,8 @@ app.include_router(tours.router)
 app.include_router(users.router)
 
 
-HOST = os.environ.get('PORT', 8000)
-PORT = os.environ.get('HOST', "localhost")
+HOST = os.environ.get('HOST', "localhost")
+PORT = int(os.environ.get('PORT', 8000))
 
 @app.get("/")
 async def root():
