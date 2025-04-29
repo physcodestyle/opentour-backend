@@ -63,3 +63,10 @@ jobs:
           builder: ${{ steps.buildx.outputs.name }}
           tags: ${{ steps.set_tag.outputs.tag }}
           labels: ${{ steps.meta.outputs.labels }}
+
+      - name: Scan image for vuln
+        uses: anchore/scan-action@v6
+        with:
+          image: ${{ steps.set_tag.outputs.tag }}
+          fail-build: true
+          severity-cutoff: critical
