@@ -11,9 +11,6 @@ env:
 
 jobs:
   lint:
-    strategy:
-      matrix:
-        python_version: ['3.10','3.11','3.12','3.13']
     runs-on: ubuntu-latest
 
     steps:
@@ -23,7 +20,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
-          python-version: ${{ matrix.python_version }}
+          python-version: '3.10'
 
       - name: Install dependencies
         run: |
@@ -38,9 +35,6 @@ jobs:
 
   test:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        python_version: ['3.10','3.11','3.12','3.13']
 
     steps:
       - name: Checkout repository
@@ -49,7 +43,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
-          python-version:  ${{ matrix.python_version }}
+          python-version: '3.10'
 
       - name: Install dependencies
         run: |
