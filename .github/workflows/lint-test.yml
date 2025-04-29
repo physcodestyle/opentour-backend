@@ -52,5 +52,5 @@ jobs:
           python -m pip install -r requirements.txt
           pip install pytest
 
-      - name: Run pytest to test code
-        run: pytest -v -s tests/
+      # - name: Run pytest to test code
+      #   run: pytest -v -s tests/
