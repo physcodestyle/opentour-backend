@@ -3,8 +3,9 @@
 #   timestamp: 2025-04-28T18:32:34+00:00
 
 from fastapi import APIRouter
+from typing import Optional
 
-from ..dependencies import KnowbaseGetResponse, Optional, ToursTourIdNotesGetResponse, Note
+from ..models import KnowbaseGetResponse, ToursTourIdNotesGetResponse, Note
 
 router = APIRouter(tags=['Knowledge Base'])
 
@@ -31,7 +32,7 @@ def delete_knowbase_note_id(note_id: int) -> None:
 
 
 @router.put('/knowbase/{note_id}', response_model=None, tags=['Knowledge Base'])
-def put_knowbase_note_id(note_id: int, body: Note = None) -> None:
+def put_knowbase_note_id(note_id: int, body: Optional[Note] = None) -> None:
     """
     Изменить заметку
     """
@@ -56,7 +57,7 @@ def get_tours_tour_id_notes(
 @router.post(
     '/tours/{tour_id}/notes', response_model=None, tags=['Knowledge Base', 'Tours']
 )
-def post_tours_tour_id_notes(tour_id: int, body: Note = None) -> None:
+def post_tours_tour_id_notes(tour_id: int, body: Optional[Note] = None) -> None:
     """
     Добавить заметку к туру
     """

@@ -3,8 +3,9 @@
 #   timestamp: 2025-04-28T18:32:34+00:00
 
 from fastapi import APIRouter
+from typing import Optional, Union
 
-from ..dependencies import AuthToken, ErrorResponse, UserLogin, Optional, Union, User, UserRegistration
+from ..models import AuthToken, ErrorResponse, UserLogin, User, UserRegistration
 
 router = APIRouter(tags=['Users'])
 

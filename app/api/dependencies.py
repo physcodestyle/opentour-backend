@@ -2,45 +2,5 @@
 #   filename:  OpenTour_api_v1.0.yaml
 #   timestamp: 2025-04-28T18:32:34+00:00
 
-from datetime import date
-from typing import List, Optional, Union
 
-from fastapi import Query
 
-from .models import (
-    AdminAnalyticsContentGetResponse,
-    AdminAnalyticsSystemGetResponse,
-    AdminAnalyticsUsersGetResponse,
-    AdminBackupPostResponse,
-    AdminBackupRestorePostRequest,
-    AdminBackupRestorePostResponse,
-    AdminLogsDeleteResponse,
-    AdminLogsGetResponseItem,
-    AdminUsersUserIdDeleteResponse,
-    AdminUsersUserIdPutResponse,
-    AgeLimit,
-    AuthToken,
-    Backup,
-    Chat,
-    ChatMessage,
-    ChatsChatIdMessagesGetResponse,
-    City,
-    Country,
-    ErrorResponse,
-    Guide,
-    KnowbaseGetResponse,
-    Note,
-    Ordering,
-    Review,
-    SheduleTourDay,
-    Tour,
-    ToursGetResponse,
-    ToursTourIdFeedbackGetResponse,
-    ToursTourIdNotesGetResponse,
-    ToursTourIdSheduleGetResponse,
-    TourTransportType,
-    User,
-    UserLogin,
-    UserRegistration,
-    UserRoleUpdate,
-)

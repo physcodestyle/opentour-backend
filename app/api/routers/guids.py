@@ -3,14 +3,15 @@
 #   timestamp: 2025-04-28T18:32:34+00:00
 
 from fastapi import APIRouter
+from typing import Optional
 
-from ..dependencies import Guide, Optional
+from ..models import Guide
 
 router = APIRouter(tags=['Guids'])
 
 
 @router.post('/guids', response_model=None, tags=['Guids'])
-def post_guids(body: Guide = None) -> None:
+def post_guids(body: Optional[Guide] = None) -> None:
     """
     Создать профиль гида
     """
@@ -39,7 +40,7 @@ def delete_guids_guide_id(guide_id: int) -> None:
 
 
 @router.put('/guids/{guide_id}', response_model=None, tags=['Guids'])
-def put_guids_guide_id(guide_id: int, body: Guide = None) -> None:
+def put_guids_guide_id(guide_id: int, body: Optional[Guide] = None) -> None:
     """
     изменение профиля гида
     """

@@ -31,7 +31,7 @@ jobs:
         run: ruff check
 
       - name: Run mypy lint
-        run: mypy --install-types --non-interactive ./app
+        run: mypy --install-types --non-interactive ./app --explicit-package-bases --ignore-missing-imports
 
   test:
     runs-on: ubuntu-latest

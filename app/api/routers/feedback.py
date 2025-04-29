@@ -3,8 +3,9 @@
 #   timestamp: 2025-04-28T18:32:34+00:00
 
 from fastapi import APIRouter
+from typing import Optional
 
-from ..dependencies import Review, ToursTourIdFeedbackGetResponse, Optional, Ordering
+from ..models import Review, ToursTourIdFeedbackGetResponse, Ordering
 
 router = APIRouter(tags=['Feedback'])
 
@@ -20,7 +21,7 @@ def delete_feedbacks_feedback_id(feedback_id: int) -> None:
 @router.post(
     '/tours/{tour_id}/feedback', response_model=None, tags=['Feedback', 'Tours']
 )
-def post_tours_tour_id_feedback(tour_id: int, body: Review = None) -> None:
+def post_tours_tour_id_feedback(tour_id: int, body: Optional[Review] = None) -> None:
     """
     Оставить отзыв о туре
     """
@@ -37,7 +38,7 @@ def get_tours_tour_id_feedback(
     tour_id: int,
     count: Optional[int] = 50,
     offset: Optional[int] = 0,
-    ordering: Optional[Ordering] = 'fresh',
+    ordering: Optional[Ordering] = Ordering.fresh,
 ) -> Optional[ToursTourIdFeedbackGetResponse]:
     """
     Получить отзывы о туре

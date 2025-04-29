@@ -2,10 +2,11 @@
 #   filename:  OpenTour_api_v1.0.yaml
 #   timestamp: 2025-04-28T18:32:34+00:00
 
-from fastapi import APIRouter
+from fastapi import APIRouter, Query
+from typing import List, Optional
 
-from ..dependencies import ToursGetResponse, Optional, Country, City, AgeLimit, Query, List, TourTransportType
-from ..dependencies import Tour, ToursTourIdSheduleGetResponse, SheduleTourDay
+from ..models import ToursGetResponse, Country, City, AgeLimit, TourTransportType
+from ..models import Tour, ToursTourIdSheduleGetResponse, SheduleTourDay
 
 router = APIRouter(tags=['Tours'])
 
@@ -32,7 +33,7 @@ def get_tours_(
 
 
 @router.post('/tours/', response_model=None, tags=['Tours'])
-def post_tours_(body: Tour = None) -> None:
+def post_tours_(body: Optional[Tour] = None) -> None:
     """
     Создать тур
     """
@@ -61,7 +62,7 @@ def delete_tours_tour_id(tour_id: int) -> None:
 
 
 @router.put('/tours/{tour_id}', response_model=None, tags=['Tours'])
-def put_tours_tour_id(tour_id: int, body: Tour = None) -> None:
+def put_tours_tour_id(tour_id: int, body: Optional[Tour] = None) -> None:
     """
     Изменить информацию о туре
     """
@@ -82,7 +83,7 @@ def get_tours_tour_id_shedule(tour_id: int) -> Optional[ToursTourIdSheduleGetRes
 
 
 @router.put('/tours/{tour_id}/shedule', response_model=None, tags=['Tours'])
-def put_tours_tour_id_shedule(tour_id: int, body: List[SheduleTourDay] = None) -> None:
+def put_tours_tour_id_shedule(tour_id: int, body: Optional[List[SheduleTourDay]] = None) -> None:
     """
     Изменить расписание тура
     """

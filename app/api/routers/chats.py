@@ -2,9 +2,9 @@
 #   filename:  OpenTour_api_v1.0.yaml
 #   timestamp: 2025-04-28T18:32:34+00:00
 
-from fastapi import APIRouter
+from fastapi import APIRouter, Query
 
-from ..dependencies import Chat, Optional, ChatsChatIdMessagesGetResponse, ChatMessage, Query
+from ..models import Chat, Optional, ChatsChatIdMessagesGetResponse, ChatMessage
 
 router = APIRouter(tags=['Chats'])
 
@@ -20,7 +20,7 @@ def get_chats() -> Optional[Chat]:
 
 
 @router.post('/chats', response_model=None, tags=['Chats'])
-def post_chats(body: Chat = None) -> None:
+def post_chats(body: Optional[Chat] = None) -> None:
     """
     Создать чат
     """
@@ -41,7 +41,7 @@ def get_chats_chat_id(chat_id: int) -> Optional[Chat]:
 
 
 @router.put('/chats/{chat_id}', response_model=None, tags=['Chats'])
-def put_chats_chat_id(chat_id: int, body: Chat = None) -> None:
+def put_chats_chat_id(chat_id: int, body: Optional[Chat] = None) -> None:
     """
     Редактировать чат
     """
@@ -74,7 +74,7 @@ def get_chats_chat_id_messages(
 
 
 @router.post('/chats/{chat_id}/messages', response_model=None, tags=['Chats'])
-def post_chats_chat_id_messages(chat_id: int, body: ChatMessage = None) -> None:
+def post_chats_chat_id_messages(chat_id: int, body: Optional[ChatMessage] = None) -> None:
     """
     Отправить сообщение в чат
     """

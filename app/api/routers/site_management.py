@@ -3,11 +3,12 @@
 #   timestamp: 2025-04-28T18:32:34+00:00
 
 from fastapi import APIRouter
+from typing import List, Optional
 
-from ..dependencies import AdminAnalyticsContentGetResponse, AdminAnalyticsSystemGetResponse, AdminAnalyticsUsersGetResponse
-from ..dependencies import AdminBackupPostResponse, Backup, AdminBackupRestorePostResponse, AdminBackupRestorePostRequest
-from ..dependencies import AdminLogsGetResponseItem, AdminLogsDeleteResponse, AdminUsersUserIdDeleteResponse
-from ..dependencies import AdminUsersUserIdPutResponse, User, UserRoleUpdate, List
+from ..models import AdminAnalyticsContentGetResponse, AdminAnalyticsSystemGetResponse, AdminAnalyticsUsersGetResponse
+from ..models import AdminBackupPostResponse, Backup, AdminBackupRestorePostResponse, AdminBackupRestorePostRequest
+from ..models import AdminLogsGetResponseItem, AdminLogsDeleteResponse, AdminUsersUserIdDeleteResponse
+from ..models import AdminUsersUserIdPutResponse, User, UserRoleUpdate
 
 router = APIRouter(tags=['Site Management'])
 
@@ -17,7 +18,7 @@ router = APIRouter(tags=['Site Management'])
     response_model=AdminAnalyticsContentGetResponse,
     tags=['Site Management'],
 )
-def get_admin_analytics_content() -> AdminAnalyticsContentGetResponse:
+def get_admin_analytics_content() -> Optional[AdminAnalyticsContentGetResponse]:
     """
     Просмотр статистики по контенту
     """
@@ -29,7 +30,7 @@ def get_admin_analytics_content() -> AdminAnalyticsContentGetResponse:
     response_model=AdminAnalyticsSystemGetResponse,
     tags=['Site Management'],
 )
-def get_admin_analytics_system() -> AdminAnalyticsSystemGetResponse:
+def get_admin_analytics_system() -> Optional[AdminAnalyticsSystemGetResponse]:
     """
     Аналитика работы системы
     """
@@ -41,7 +42,7 @@ def get_admin_analytics_system() -> AdminAnalyticsSystemGetResponse:
     response_model=AdminAnalyticsUsersGetResponse,
     tags=['Site Management'],
 )
-def get_admin_analytics_users() -> AdminAnalyticsUsersGetResponse:
+def get_admin_analytics_users() -> Optional[AdminAnalyticsUsersGetResponse]:
     """
     Просмотр статистики по пользователям
     """
@@ -51,7 +52,7 @@ def get_admin_analytics_users() -> AdminAnalyticsUsersGetResponse:
 @router.post(
     '/admin/backup', response_model=AdminBackupPostResponse, tags=['Site Management']
 )
-def post_admin_backup() -> AdminBackupPostResponse:
+def post_admin_backup() -> Optional[AdminBackupPostResponse]:
     """
     Создание резервной копии
     """
@@ -59,7 +60,7 @@ def post_admin_backup() -> AdminBackupPostResponse:
 
 
 @router.get('/admin/backup/list', response_model=List[Backup], tags=['Site Management'])
-def get_admin_backup_list() -> List[Backup]:
+def get_admin_backup_list() -> Optional[List[Backup]]:
     """
     Получение списка резервных копий
     """
@@ -73,7 +74,7 @@ def get_admin_backup_list() -> List[Backup]:
 )
 def post_admin_backup_restore(
     body: AdminBackupRestorePostRequest,
-) -> AdminBackupRestorePostResponse:
+) -> Optional[AdminBackupRestorePostResponse]:
     """
     Восстановление данных из резервной копии
     """
@@ -85,7 +86,7 @@ def post_admin_backup_restore(
     response_model=List[AdminLogsGetResponseItem],
     tags=['Site Management'],
 )
-def get_admin_logs() -> List[AdminLogsGetResponseItem]:
+def get_admin_logs() -> Optional[List[AdminLogsGetResponseItem]]:
     """
     Получение логов системы
     """
@@ -95,7 +96,7 @@ def get_admin_logs() -> List[AdminLogsGetResponseItem]:
 @router.delete(
     '/admin/logs', response_model=AdminLogsDeleteResponse, tags=['Site Management']
 )
-def delete_admin_logs() -> AdminLogsDeleteResponse:
+def delete_admin_logs() -> Optional[AdminLogsDeleteResponse]:
     """
     Очищение логов системы
     """
@@ -103,7 +104,7 @@ def delete_admin_logs() -> AdminLogsDeleteResponse:
 
 
 @router.get('/admin/users', response_model=List[User], tags=['Site Management'])
-def get_admin_users() -> List[User]:
+def get_admin_users() -> Optional[List[User]]:
     """
     Получение списка пользователей
     """
@@ -113,7 +114,7 @@ def get_admin_users() -> List[User]:
 @router.get(
     '/admin/users/{user_id}', response_model=List[User], tags=['Site Management']
 )
-def get_admin_users_user_id(user_id: str) -> List[User]:
+def get_admin_users_user_id(user_id: str) -> Optional[List[User]]:
     """
     Получение информации о пользователе
     """
@@ -125,7 +126,7 @@ def get_admin_users_user_id(user_id: str) -> List[User]:
     response_model=AdminUsersUserIdDeleteResponse,
     tags=['Site Management'],
 )
-def delete_admin_users_user_id(user_id: str) -> AdminUsersUserIdDeleteResponse:
+def delete_admin_users_user_id(user_id: str) -> Optional[AdminUsersUserIdDeleteResponse]:
     """
     Удаление пользователя
     """
@@ -139,7 +140,7 @@ def delete_admin_users_user_id(user_id: str) -> AdminUsersUserIdDeleteResponse:
 )
 def put_admin_users_user_id(
     user_id: str, body: UserRoleUpdate = ...
-) -> AdminUsersUserIdPutResponse:
+) -> Optional[AdminUsersUserIdPutResponse]:
     """
     Смена роли пользователя
     """
