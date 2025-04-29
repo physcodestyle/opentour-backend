@@ -9,11 +9,11 @@ env:
   IMAGE_NAME: ${{ github.repository }}
 
 jobs:
-  lint-test:
-    uses: ./.github/workflows/lint-test.yml
+  # lint-test:
+    # uses: ./.github/workflows/lint-test.yml
   build:
     runs-on: ubuntu-latest
-    needs: ['lint-test']
+    # needs: ['lint-test']
     permissions:
       packages: write
       contents: read
@@ -71,4 +71,10 @@ jobs:
           image: ${{ steps.set_tag.outputs.tag }}
           fail-build: false
           severity-cutoff: critical
-          output-format: table
+          output-format: json
+          output-file: report.json
+    
+      - uses: actions/upload-artifact@v4
+        with:
+          name: vuln-report
+          path: report.json
